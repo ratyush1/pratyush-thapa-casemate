@@ -47,6 +47,7 @@ exports.createAppointment = async (req, res) => {
       caseDetails: caseDetails || '',
       caseDocuments: [publicPath],
       amount: Math.round(amount * 100) / 100,
+      timeline: [{ event: 'created', note: 'Appointment requested', actorRole: 'client', timestamp: new Date() }],
     });
     const populated = await Appointment.findById(appointment._id)
       .populate('lawyer', 'name email')
@@ -157,6 +158,15 @@ exports.updateAppointmentStatus = async (req, res) => {
       if (status === 'accepted' && appointment.lawyerReviewed !== true) {
         return res.status(400).json({ success: false, message: 'You must mark the case as reviewed before accepting the appointment' });
       }
+      const timelineNotes = {
+        accepted: 'Lawyer accepted the appointment',
+        rejected: 'Lawyer declined the appointment',
+        completed: 'Appointment marked as completed',
+        cancelled: 'Appointment cancelled',
+      };
+      const tlEntry = { event: status, note: timelineNotes[status] || status, actorRole: 'lawyer', timestamp: new Date() };
+      if (!appointment.timeline) appointment.timeline = [];
+      appointment.timeline.push(tlEntry);
       appointment.status = status;
       await appointment.save();
     }
@@ -165,8 +175,8 @@ exports.updateAppointmentStatus = async (req, res) => {
       .populate('client', 'name email');
     // notify client when lawyer accepts or rejects
     try {
+      const io = getIO();
       if (['accepted', 'rejected'].includes(status)) {
-        const io = getIO();
         const payload = { appointmentId: updated._id.toString(), body: `Your appointment was ${status}`, appointment: updated };
         io.to(`appointment_${updated._id}`).emit('appointment_notification', payload);
         const clientId = updated.client && updated.client._id ? updated.client._id.toString() : (updated.client ? updated.client.toString() : null);
@@ -183,6 +193,17 @@ exports.updateAppointmentStatus = async (req, res) => {
             });
           });
         }
+      }
+      // emit timeline update to client and both parties
+      const tlEntry2 = (updated.timeline || []).slice(-1)[0];
+      if (tlEntry2) {
+        const tlPayload = { appointmentId: updated._id.toString(), entry: tlEntry2, appointment: updated };
+        io.to(`appointment_${updated._id}`).emit('case_timeline_update', tlPayload);
+        const cId = updated.client?._id?.toString() || updated.client?.toString();
+        const lId = updated.lawyer?._id?.toString() || updated.lawyer?.toString();
+        [cId, lId].filter(Boolean).forEach((uid) => {
+          (getUserSocketIds(uid) || []).forEach((sid) => io.to(sid).emit('case_timeline_update', tlPayload));
+        });
       }
       io.emit('appointment_updated', { appointmentId: updated._id.toString(), action: 'status_updated', appointment: updated });
       io.emit('stats_updated', { reason: 'appointment_status_updated' });
@@ -240,6 +261,8 @@ exports.uploadCaseFile = async (req, res) => {
       const publicPath = `/uploads/documents/${req.file.filename}`;
       appointment.caseDocuments = appointment.caseDocuments || [];
       appointment.caseDocuments.push(publicPath);
+      if (!appointment.timeline) appointment.timeline = [];
+      appointment.timeline.push({ event: 'document_uploaded', note: 'New document added to case', actorRole: 'client', timestamp: new Date() });
     }
     await appointment.save();
     const updated = await Appointment.findById(appointment._id)
@@ -288,10 +311,23 @@ exports.markReviewed = async (req, res) => {
     }
     appointment.lawyerReviewed = true;
     appointment.lawyerReviewedAt = new Date();
+    if (!appointment.timeline) appointment.timeline = [];
+    appointment.timeline.push({ event: 'case_reviewed', note: 'Lawyer reviewed your case details', actorRole: 'lawyer', timestamp: new Date() });
     await appointment.save();
     const updated = await Appointment.findById(appointment._id)
       .populate('lawyer', 'name email')
       .populate('client', 'name email');
+    // emit timeline update to client
+    try {
+      const io = getIO();
+      const tlEntry = (updated.timeline || []).slice(-1)[0];
+      if (tlEntry) {
+        const tlPayload = { appointmentId: updated._id.toString(), entry: tlEntry, appointment: updated };
+        io.to(`appointment_${updated._id}`).emit('case_timeline_update', tlPayload);
+        const cId = updated.client?._id?.toString() || updated.client?.toString();
+        if (cId) (getUserSocketIds(cId) || []).forEach((sid) => io.to(sid).emit('case_timeline_update', tlPayload));
+      }
+    } catch (e) {}
     res.json({ success: true, appointment: updated });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });

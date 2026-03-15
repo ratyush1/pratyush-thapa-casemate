@@ -20,6 +20,15 @@ const appointmentSchema = new mongoose.Schema(
     notes: { type: String, default: '' },
     amount: { type: Number, default: 0 },
     paymentStatus: { type: String, enum: ['pending', 'paid', 'refunded'], default: 'pending' },
+    timeline: [
+      {
+        event: { type: String, required: true },
+        note: { type: String, default: '' },
+        actorRole: { type: String, enum: ['client', 'lawyer', 'system'], default: 'system' },
+        timestamp: { type: Date, default: Date.now },
+        _id: false,
+      },
+    ],
   },
   { timestamps: true }
 );

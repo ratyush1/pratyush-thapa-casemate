@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import api from '../api/axios';
 import { getAssetUrl } from '../utils/media';
+import StarRating from './StarRating';
 
 export default function LawyerList({ onSelect, recommendationContext }) {
   const [lawyers, setLawyers] = useState([]);
@@ -114,6 +115,12 @@ export default function LawyerList({ onSelect, recommendationContext }) {
                 <div className="min-w-0">
                 <h3 className="font-semibold text-white truncate">{l.name}</h3>
                 <p className="text-slate-500 text-sm truncate">{l.email}</p>
+                {l.profile?.totalReviews > 0 && (
+                  <div className="flex items-center gap-1.5 mt-0.5">
+                    <StarRating value={l.profile.rating || 0} size="sm" />
+                    <span className="text-xs text-slate-500">{(l.profile.rating || 0).toFixed(1)} ({l.profile.totalReviews})</span>
+                  </div>
+                )}
                 </div>
               </div>
               <div className="shrink-0 flex flex-col items-end gap-2">

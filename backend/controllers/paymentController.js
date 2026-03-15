@@ -1,6 +1,7 @@
 const Payment = require('../models/Payment');
 const Appointment = require('../models/Appointment');
 const { getIO } = require('../utils/socket');
+const { getUserSocketIds } = require('../utils/socket');
 const crypto = require('crypto');
 
 const isLocalDevOrigin = (origin) => /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i.test(origin);
@@ -94,7 +95,21 @@ const markPaymentCompleted = async ({ payment, appointment, amount, verifyRespon
   await payment.save();
 
   appointment.paymentStatus = 'paid';
+  if (!appointment.timeline) appointment.timeline = [];
+  appointment.timeline.push({ event: 'paid', note: 'Payment completed successfully', actorRole: 'client', timestamp: new Date() });
   await appointment.save();
+
+  // emit timeline update to client
+  try {
+    const io = getIO();
+    const tlEntry = (appointment.timeline || []).slice(-1)[0];
+    if (tlEntry) {
+      const tlPayload = { appointmentId: appointment._id.toString(), entry: tlEntry };
+      io.to(`appointment_${appointment._id}`).emit('case_timeline_update', tlPayload);
+      const cId = appointment.client?.toString?.() || (appointment.client?._id?.toString?.());
+      if (cId) (getUserSocketIds(cId) || []).forEach((sid) => io.to(sid).emit('case_timeline_update', tlPayload));
+    }
+  } catch (e) {}
 
   emitPaymentUpdates(payment._id, appointment._id);
 };

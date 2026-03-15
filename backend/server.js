@@ -13,6 +13,7 @@ const lawyersRoutes = require('./routes/lawyers');
 const appointmentsRoutes = require('./routes/appointments');
 const paymentsRoutes = require('./routes/payments');
 const adminRoutes = require('./routes/admin');
+const reviewsRoutes = require('./routes/reviews');
 
 connectDB();
 const app = express();
@@ -53,6 +54,7 @@ app.use('/api/lawyers', lawyersRoutes);
 app.use('/api/appointments', appointmentsRoutes);
 app.use('/api/payments', paymentsRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/reviews', reviewsRoutes);
 
 app.get('/api/health', (req, res) => res.json({ success: true, message: 'Casemate API running' }));
 

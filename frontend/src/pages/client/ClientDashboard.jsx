@@ -5,15 +5,17 @@ import LawyerList from '../../components/LawyerList';
 import AppointmentsList from '../../components/AppointmentsList';
 import BookAppointment from '../../components/BookAppointment';
 import ClientProfileEdit from '../../components/ClientProfileEdit';
+import CaseTracker from '../../components/CaseTracker';
 import { useAuth } from '../../context/AuthContext';
 import { getAssetUrl } from '../../utils/media';
 import api from '../../api/axios';
 
 const tabs = [
-  { id: 'chat', label: 'Legal Chat', desc: 'Ask the AI' },
-  { id: 'lawyers', label: 'Find Lawyers', desc: 'Book a consultation' },
-  { id: 'appointments', label: 'My Appointments', desc: 'Track bookings' },
-  { id: 'profile', label: 'Profile', desc: 'Edit your account' },
+  { id: 'chat',        label: 'Legal Chat',    desc: 'Ask the AI' },
+  { id: 'lawyers',     label: 'Find Lawyers',  desc: 'Book a consultation' },
+  { id: 'appointments',label: 'My Appointments',desc: 'Track bookings' },
+  { id: 'tracker',     label: 'Case Tracker',  desc: 'Live case progress' },
+  { id: 'profile',     label: 'Profile',       desc: 'Edit your account' },
 ];
 
 export default function ClientDashboard() {
@@ -173,6 +175,7 @@ export default function ClientDashboard() {
         )
       )}
       {activeTab === 'appointments' && <AppointmentsList />}
+      {activeTab === 'tracker' && <CaseTracker />}
       {activeTab === 'profile' && <ClientProfileEdit />}
     </div>
   );

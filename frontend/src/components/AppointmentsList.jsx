@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import api from '../api/axios';
 import AppointmentChat from './AppointmentChat';
+import StarRating from './StarRating';
 import { io } from 'socket.io-client';
 
 const getStatusBadge = (status) => {
@@ -24,6 +25,25 @@ export default function AppointmentsList() {
   const [uploadingApt, setUploadingApt] = useState(null);
   const [uploadFile, setUploadFile] = useState(null);
   const [uploadLoading, setUploadLoading] = useState(false);
+
+  // Review state
+  // myReviews: Map<appointmentId, review>
+  const [myReviews, setMyReviews] = useState({});
+  const [reviewingApt, setReviewingApt] = useState(null); // appointment being reviewed
+  const [reviewRating, setReviewRating] = useState(0);
+  const [reviewComment, setReviewComment] = useState('');
+  const [reviewSubmitting, setReviewSubmitting] = useState(false);
+  const [reviewError, setReviewError] = useState('');
+
+  const fetchMyReviews = () => {
+    api.get('/reviews/my-reviews')
+      .then(({ data }) => {
+        const map = {};
+        (data.reviews || []).forEach((r) => { map[r.appointment] = r; });
+        setMyReviews(map);
+      })
+      .catch(() => {});
+  };
 
   const openPaymentReceipt = (payment, appointment) => {
     if (!payment) return;
@@ -86,6 +106,8 @@ export default function AppointmentsList() {
       setAppointments(data.appointments || []);
       setLoading(false);
     }).catch(() => setLoading(false));
+
+    fetchMyReviews();
 
     // realtime socket to update appointment list when chat messages arrive
     try {
@@ -192,6 +214,32 @@ export default function AppointmentsList() {
       if (activeChat && activeChat._id === id) setActiveChat(null);
     } catch (e) {
       alert(e.response?.data?.message || 'Failed to delete');
+    }
+  };
+
+  const openReviewModal = (apt) => {
+    setReviewingApt(apt);
+    setReviewRating(0);
+    setReviewComment('');
+    setReviewError('');
+  };
+
+  const submitReview = async () => {
+    if (!reviewRating) { setReviewError('Please select a star rating.'); return; }
+    setReviewSubmitting(true);
+    setReviewError('');
+    try {
+      await api.post('/reviews', {
+        appointmentId: reviewingApt._id,
+        rating: reviewRating,
+        comment: reviewComment,
+      });
+      fetchMyReviews();
+      setReviewingApt(null);
+    } catch (e) {
+      setReviewError(e.response?.data?.message || 'Failed to submit review');
+    } finally {
+      setReviewSubmitting(false);
     }
   };
 
@@ -349,6 +397,22 @@ export default function AppointmentsList() {
             ) : (
               <div className="text-sm text-slate-500">Chat available after acceptance</div>
             )}
+            {apt.status === 'completed' && (
+              myReviews[apt._id] ? (
+                <div className="flex items-center gap-1.5 text-sm text-slate-400">
+                  <StarRating value={myReviews[apt._id].rating} size="sm" />
+                  <span>Reviewed</span>
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => openReviewModal(apt)}
+                  className="btn-secondary rounded-xl text-sm"
+                >
+                  Write a Review
+                </button>
+              )
+            )}
             {(apt.status === 'completed' && apt.paymentStatus === 'paid') && (
               <button type="button" onClick={() => deleteAppointment(apt._id)} className="btn-danger rounded-xl text-sm">
                 Delete
@@ -360,6 +424,57 @@ export default function AppointmentsList() {
       {activeChat && (
         <AppointmentChat appointment={activeChat} onClose={() => setActiveChat(null)} />
       )}
+
+      {/* Review Modal */}
+      {reviewingApt && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+          <div className="card-glass w-full max-w-md p-6 space-y-5 border border-slate-700/60 shadow-2xl">
+            <div>
+              <h2 className="text-lg font-semibold text-white">Review {reviewingApt.lawyer?.name}</h2>
+              <p className="text-sm text-slate-400 mt-1">Share your experience to help other clients.</p>
+            </div>
+
+            <div>
+              <p className="text-sm text-slate-300 mb-2">Your rating</p>
+              <StarRating value={reviewRating} onChange={setReviewRating} size="lg" />
+            </div>
+
+            <div>
+              <label className="block text-sm text-slate-300 mb-1.5">Written feedback (optional)</label>
+              <textarea
+                className="input w-full h-28 resize-none"
+                placeholder="Describe your experience with this lawyer..."
+                value={reviewComment}
+                onChange={(e) => setReviewComment(e.target.value)}
+                maxLength={1000}
+              />
+              <p className="text-xs text-slate-500 mt-1 text-right">{reviewComment.length}/1000</p>
+            </div>
+
+            {reviewError && <p className="text-sm text-red-400">{reviewError}</p>}
+
+            <div className="flex gap-2 justify-end">
+              <button
+                type="button"
+                onClick={() => setReviewingApt(null)}
+                className="btn-ghost"
+                disabled={reviewSubmitting}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={submitReview}
+                className="btn-primary"
+                disabled={reviewSubmitting || !reviewRating}
+              >
+                {reviewSubmitting ? 'Submitting...' : 'Submit Review'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
+

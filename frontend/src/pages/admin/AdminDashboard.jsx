@@ -6,6 +6,7 @@ import AdminLawyers from '../../components/AdminLawyers';
 import AdminChats from '../../components/AdminChats';
 import AdminAppointments from '../../components/AdminAppointments';
 import AdminStats from '../../components/AdminStats';
+import AdminReviews from '../../components/AdminReviews';
 
 export default function AdminDashboard() {
   const [unreadChats, setUnreadChats] = React.useState(0);
@@ -55,6 +56,9 @@ export default function AdminDashboard() {
         <NavLink to="/admin/appointments" className={({ isActive }) => `tab-pill ${isActive ? 'tab-pill-active' : ''}`}>
           Appointments
         </NavLink>
+        <NavLink to="/admin/reviews" className={({ isActive }) => `tab-pill ${isActive ? 'tab-pill-active' : ''}`}>
+          Reviews
+        </NavLink>
       </nav>
       <Routes>
         <Route index element={<AdminStats />} />
@@ -62,6 +66,7 @@ export default function AdminDashboard() {
         <Route path="lawyers" element={<AdminLawyers />} />
         <Route path="chats" element={<AdminChats />} />
         <Route path="appointments" element={<AdminAppointments />} />
+        <Route path="reviews" element={<AdminReviews />} />
       </Routes>
     </div>
   );
