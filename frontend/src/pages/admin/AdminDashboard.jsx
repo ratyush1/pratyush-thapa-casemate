@@ -20,31 +20,39 @@ export default function AdminDashboard() {
     return () => { mounted = false; };
   }, []);
   return (
-    <div className="space-y-8 animate-fade-in">
-      <div className="card-glass p-6 md:p-8 border-brand-500/15">
-        <div className="flex flex-wrap items-center gap-2">
+    <div className="page-shell animate-fade-in">
+      <div className="dashboard-hero">
+        <div className="hero-grid">
+          <div>
+            <div className="flex flex-wrap items-center gap-2">
           <h1 className="font-display text-2xl md:text-3xl font-bold text-white tracking-tight">Admin Dashboard</h1>
-          <span className="px-2.5 py-0.5 rounded-lg bg-amber-500/20 text-amber-400 text-xs font-medium">Main admin</span>
+              <span className="badge-warning">Main admin</span>
+            </div>
+            <p className="text-slate-300 mt-2 max-w-2xl">Manage users, verify lawyers, monitor activity, and keep platform operations clean and readable from one control center.</p>
+          </div>
+          <div className="flex items-center gap-3 flex-wrap lg:justify-end">
+            <span className="badge-info">Platform health</span>
+            {unreadChats > 0 && <span className="badge-danger">{unreadChats} unread chats</span>}
+          </div>
         </div>
-        <p className="text-slate-300 mt-2">Manage users, verify lawyers (check their documents), and monitor activity. Only one admin account exists.</p>
       </div>
-      <nav className="flex flex-wrap gap-2 p-1.5 rounded-2xl bg-surface-900/70 border border-slate-700/60">
-        <NavLink to="/admin" end className={({ isActive }) => `px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${isActive ? 'bg-gradient-to-r from-brand-500 to-brand-400 text-slate-900 shadow-lg shadow-brand-500/20' : 'text-slate-400 hover:text-white hover:bg-white/5'}`}>
+      <nav className="tabs-shell">
+        <NavLink to="/admin" end className={({ isActive }) => `tab-pill ${isActive ? 'tab-pill-active' : ''}`}>
           Stats
         </NavLink>
-        <NavLink to="/admin/users" className={({ isActive }) => `px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${isActive ? 'bg-gradient-to-r from-brand-500 to-brand-400 text-slate-900 shadow-lg shadow-brand-500/20' : 'text-slate-400 hover:text-white hover:bg-white/5'}`}>
+        <NavLink to="/admin/users" className={({ isActive }) => `tab-pill ${isActive ? 'tab-pill-active' : ''}`}>
           Users
         </NavLink>
-        <NavLink to="/admin/lawyers" className={({ isActive }) => `px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${isActive ? 'bg-gradient-to-r from-brand-500 to-brand-400 text-slate-900 shadow-lg shadow-brand-500/20' : 'text-slate-400 hover:text-white hover:bg-white/5'}`}>
+        <NavLink to="/admin/lawyers" className={({ isActive }) => `tab-pill ${isActive ? 'tab-pill-active' : ''}`}>
           Lawyers
         </NavLink>
-        <NavLink to="/admin/chats" className={({ isActive }) => `px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${isActive ? 'bg-gradient-to-r from-brand-500 to-brand-400 text-slate-900 shadow-lg shadow-brand-500/20' : 'text-slate-400 hover:text-white hover:bg-white/5'}`}>
+        <NavLink to="/admin/chats" className={({ isActive }) => `tab-pill ${isActive ? 'tab-pill-active' : ''}`}>
           Chats
           {unreadChats > 0 && (
-            <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs bg-rose-500 text-white">{unreadChats}</span>
+            <span className="ml-2 badge-danger">{unreadChats}</span>
           )}
         </NavLink>
-        <NavLink to="/admin/appointments" className={({ isActive }) => `px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${isActive ? 'bg-gradient-to-r from-brand-500 to-brand-400 text-slate-900 shadow-lg shadow-brand-500/20' : 'text-slate-400 hover:text-white hover:bg-white/5'}`}>
+        <NavLink to="/admin/appointments" className={({ isActive }) => `tab-pill ${isActive ? 'tab-pill-active' : ''}`}>
           Appointments
         </NavLink>
       </nav>

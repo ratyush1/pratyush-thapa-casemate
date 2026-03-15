@@ -437,11 +437,11 @@ export default function AppointmentChat({ appointment, onClose }) {
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/50" onClick={onClose} />
-      <div className="relative max-w-2xl w-full bg-surface-900 rounded-xl overflow-hidden shadow-lg">
-        <div className="p-4 border-b border-slate-800 flex items-center justify-between">
+      <div className="relative max-w-4xl w-full card-glass overflow-hidden border-slate-700/60 shadow-panel">
+        <div className="p-4 md:p-5 border-b border-slate-800 flex items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-2">
-              <h3 className="text-lg font-semibold">Chat about appointment</h3>
+              <h3 className="text-lg font-semibold text-white">Chat about appointment</h3>
               <div className={`w-2 h-2 rounded-full ${socketConnected ? 'bg-green-500' : 'bg-red-500'}`} title={socketConnected ? 'Connected' : 'Disconnected'} />
             </div>
             <p className="text-slate-400 text-sm">Lawyer: {appointment.lawyer?.name}</p>
@@ -473,7 +473,7 @@ export default function AppointmentChat({ appointment, onClose }) {
         </div>
 
         {incomingCall && !callActive && (
-          <div className="p-4 border-b border-slate-800 bg-amber-900/20 border-amber-800/30 flex items-center justify-between">
+          <div className="p-4 border-b border-slate-800 bg-amber-900/20 border-amber-800/30 flex items-center justify-between gap-4">
             <div className="flex items-center gap-3">
               <div className="w-3 h-3 bg-amber-500 rounded-full animate-pulse" />
               <div>
@@ -485,14 +485,14 @@ export default function AppointmentChat({ appointment, onClose }) {
               <button 
                 type="button" 
                 onClick={acceptCall} 
-                className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                className="btn-primary text-sm"
               >
                 Accept
               </button>
               <button 
                 type="button" 
                 onClick={rejectCall} 
-                className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                className="btn-danger text-sm"
               >
                 Reject
               </button>
@@ -513,9 +513,9 @@ export default function AppointmentChat({ appointment, onClose }) {
               autoPlay 
               muted 
               playsInline 
-              className="absolute bottom-4 right-4 w-32 h-24 bg-black rounded-lg border-2 border-slate-600 object-cover shadow-lg"
+              className="absolute bottom-4 right-4 w-32 h-24 bg-black rounded-2xl border-2 border-slate-600 object-cover shadow-lg"
             />
-            <div className="absolute top-4 left-4 bg-black/60 rounded-lg px-3 py-2">
+            <div className="absolute top-4 left-4 bg-black/60 rounded-2xl px-3 py-2">
               <p className="text-white font-semibold text-sm">{callStatus === 'connecting' ? 'Connecting...' : 'In call'}</p>
               <p className="text-slate-300 text-xs">{appointment.lawyer?.name}</p>
             </div>
@@ -523,54 +523,54 @@ export default function AppointmentChat({ appointment, onClose }) {
               <button 
                 type="button" 
                 onClick={toggleMute}
-                className={`px-4 py-2 rounded-lg font-medium transition-all ${isMuted ? 'bg-red-600 hover:bg-red-700' : 'bg-slate-700 hover:bg-slate-600'} text-white text-sm`}
+                className={`btn text-sm px-4 py-2.5 ${isMuted ? 'bg-rose-500 text-white' : 'bg-slate-700 text-white hover:bg-slate-600'}`}
               >
                 {isMuted ? '🔇 Unmute' : '🎤 Mute'}
               </button>
               <button 
                 type="button" 
                 onClick={toggleCamera}
-                className={`px-4 py-2 rounded-lg font-medium transition-all ${isCameraOff ? 'bg-red-600 hover:bg-red-700' : 'bg-slate-700 hover:bg-slate-600'} text-white text-sm`}
+                className={`btn text-sm px-4 py-2.5 ${isCameraOff ? 'bg-rose-500 text-white' : 'bg-slate-700 text-white hover:bg-slate-600'}`}
               >
                 {isCameraOff ? '📹 Camera On' : '📹 Camera Off'}
               </button>
               <button 
                 type="button" 
                 onClick={endCall}
-                className="px-4 py-2 rounded-lg font-medium bg-red-600 hover:bg-red-700 text-white transition-all text-sm"
+                className="btn-danger text-sm px-4 py-2.5"
               >
                 ☎️ Hang Up
               </button>
             </div>
           </div>
         )}
-        <div className="p-4 h-[400px] overflow-y-auto bg-surface-800">
+        <div className="p-4 md:p-5 h-[400px] overflow-y-auto bg-surface-900/45">
           {loading && <p className="text-slate-400">Loading...</p>}
           {appointmentDetails && appointmentDetails.status !== 'accepted' && (
-            <div className="mb-3 p-3 rounded-xl bg-amber-900/10 border border-amber-800/20 text-amber-200 text-sm">
+            <div className="mb-3 p-3 rounded-2xl bg-amber-900/10 border border-amber-800/20 text-amber-200 text-sm">
               Video calls and chat are available once the appointment is accepted by the lawyer.
             </div>
           )}
           {appointmentDetails && (
-            <div className="mb-3 p-3 rounded-xl bg-surface-700 border border-slate-800 text-sm text-slate-300">
+            <div className="mb-4 p-4 rounded-[24px] bg-surface-800/80 border border-slate-700/80 text-sm text-slate-300">
               {appointmentDetails.caseDetails ? (
                 <div className="mb-2">
-                  <div className="text-xs text-slate-400">Case details</div>
+                  <div className="text-xs uppercase tracking-[0.18em] text-slate-500">Case details</div>
                   <div className="mt-1 whitespace-pre-wrap">{appointmentDetails.caseDetails}</div>
                 </div>
               ) : null}
               {appointmentDetails.caseDocuments && appointmentDetails.caseDocuments.length > 0 && (
                 <div>
-                  <div className="text-xs text-slate-400 mb-1">Documents</div>
+                  <div className="text-xs uppercase tracking-[0.18em] text-slate-500 mb-2">Documents</div>
                   {appointmentDetails.caseDocuments.map((d, i) => {
                     return (
                       <button
                         key={i}
                         type="button"
                         onClick={() => downloadDocument(appointment._id, d, i)}
-                        className="text-teal-400 block hover:underline text-sm"
+                        className="badge-neutral mr-2 mb-2 hover:text-white"
                       >
-                        View document {i + 1}
+                        Document {i + 1}
                       </button>
                     );
                   })}
@@ -599,8 +599,8 @@ export default function AppointmentChat({ appointment, onClose }) {
                 const time = m.createdAt ? new Date(m.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
                 return (
                   <div key={i} className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}>
-                    <div className={`p-3 rounded-lg max-w-[75%] break-words ${isMe ? 'bg-brand-500 text-white' : 'bg-surface-700 text-slate-100'}`}>
-                      <div className={`flex items-baseline justify-between gap-2 mb-1 ${isMe ? 'text-brand-100' : 'text-slate-400'}`}>
+                    <div className={`p-3 rounded-[22px] max-w-[75%] break-words shadow-sm ${isMe ? 'bg-gradient-to-r from-brand-400 to-brand-500 text-slate-950' : 'bg-surface-800 text-slate-100 border border-slate-700/70'}`}>
+                      <div className={`flex items-baseline justify-between gap-2 mb-1 ${isMe ? 'text-slate-900/70' : 'text-slate-400'}`}>
                         <div className="text-xs font-medium">{label}</div>
                         <div className="text-xs opacity-70">{time}</div>
                       </div>
@@ -613,7 +613,7 @@ export default function AppointmentChat({ appointment, onClose }) {
             </div>
           )}
         </div>
-        <div className="p-4 border-t border-slate-800 flex gap-2">
+        <div className="p-4 md:p-5 border-t border-slate-800 flex gap-2 bg-surface-900/50">
           <input 
             value={text} 
             onChange={(e) => setText(e.target.value)} 

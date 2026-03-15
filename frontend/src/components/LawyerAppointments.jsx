@@ -3,6 +3,12 @@ import api from '../api/axios';
 import { io } from 'socket.io-client';
 import AppointmentChat from './AppointmentChat';
 
+const getStatusBadge = (status) => {
+  if (status === 'accepted' || status === 'completed') return 'badge-success';
+  if (status === 'rejected' || status === 'cancelled') return 'badge-danger';
+  return 'badge-warning';
+};
+
 export default function LawyerAppointments() {
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -151,36 +157,33 @@ export default function LawyerAppointments() {
   return (
     <div className="grid gap-4">
       {appointments.map((apt) => (
-        <div key={apt._id} className="card-interactive p-5 relative">
+        <div key={apt._id} className="metric-card relative">
           {!apt.lawyerReviewed && apt.status === 'pending' && (
             <div className="absolute top-3 right-3 bg-amber-500 rounded-full w-3 h-3 animate-pulse" title="New appointment" />
           )}
-          <p className="font-semibold text-white">Client: {apt.client?.name}</p>
+          <div className="flex flex-wrap items-center gap-2">
+            <p className="font-semibold text-white">{apt.client?.name}</p>
+            <span className={getStatusBadge(apt.status)}>{apt.status}</span>
+            {apt.chat?.unreadForLawyer && <span className="badge-danger">New message</span>}
+          </div>
           <p className="text-slate-500 text-sm">{apt.client?.email}</p>
           <p className="text-slate-400 text-sm mt-1">
             {new Date(apt.date).toLocaleDateString()} · {apt.timeSlot} · NPR {apt.amount}
           </p>
-          {apt.chat?.unreadForLawyer && (
-            <div className="mt-2">
-              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs bg-rose-500 text-white">New</span>
-            </div>
-          )}
-          <p className="text-slate-500 text-sm capitalize">Status: {apt.status}</p>
           {apt.caseDetails && (
-            <div className="mt-3 p-3 bg-surface-800/50 rounded-xl text-slate-300 text-sm border border-slate-700/50">{apt.caseDetails}</div>
+            <div className="mt-3 p-3 bg-surface-800/50 rounded-2xl text-slate-300 text-sm border border-slate-700/50">{apt.caseDetails}</div>
           )}
           {apt.caseDocuments && apt.caseDocuments.length > 0 && (
-            <div className="mt-3 space-y-2">
-              <div className="text-slate-400 text-sm">Documents:</div>
+            <div className="mt-3 flex flex-wrap gap-2">
               {apt.caseDocuments.map((doc, i) => {
                 return (
                   <button
                     key={i}
                     type="button"
                     onClick={() => downloadDocument(apt._id, doc, i)}
-                    className="text-teal-400 text-sm block hover:underline"
+                    className="badge-neutral hover:text-white"
                   >
-                    View document {i + 1}
+                    Document {i + 1}
                   </button>
                 );
               })}
@@ -209,13 +212,13 @@ export default function LawyerAppointments() {
             </div>
           )}
           {apt.status === 'accepted' && (
-            <button type="button" onClick={() => updateStatus(apt._id, 'completed')} className="btn-ghost text-sm mt-3 rounded-xl">
+            <button type="button" onClick={() => updateStatus(apt._id, 'completed')} className="btn-secondary text-sm mt-3 rounded-xl">
               Mark completed
             </button>
           )}
           <div className="mt-3 flex gap-2">
             {apt.status === 'accepted' ? (
-              <button type="button" onClick={() => setActiveChat(apt)} className="btn-ghost text-sm rounded-xl">
+              <button type="button" onClick={() => setActiveChat(apt)} className="btn-secondary text-sm rounded-xl">
                 Open chat
               </button>
             ) : (

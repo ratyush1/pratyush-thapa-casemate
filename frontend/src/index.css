@@ -2,47 +2,137 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  color-scheme: dark;
+}
+
 body {
   @apply bg-surface-950 text-slate-100 font-sans antialiased;
-  background-image: radial-gradient(circle at 15% 20%, rgba(99, 102, 241, 0.14), transparent 35%), radial-gradient(circle at 80% 10%, rgba(20, 184, 166, 0.12), transparent 38%), radial-gradient(circle at 50% 100%, rgba(236, 72, 153, 0.08), transparent 40%);
+  background-image: radial-gradient(circle at 12% 14%, rgba(34, 211, 238, 0.14), transparent 28%), radial-gradient(circle at 86% 12%, rgba(13, 148, 136, 0.14), transparent 30%), radial-gradient(circle at 48% 110%, rgba(245, 158, 11, 0.08), transparent 28%), linear-gradient(180deg, #020617 0%, #08111f 52%, #020617 100%);
+  min-height: 100vh;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+::selection {
+  background: rgba(34, 211, 238, 0.28);
+  color: #ecfeff;
 }
 
 @layer components {
   .btn {
-    @apply inline-flex items-center justify-center rounded-xl font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-brand-500/50 focus:ring-offset-2 focus:ring-offset-surface-950 disabled:opacity-50 disabled:pointer-events-none;
+    @apply inline-flex items-center justify-center gap-2 rounded-2xl font-semibold transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-brand-500/50 focus:ring-offset-2 focus:ring-offset-surface-950 disabled:opacity-50 disabled:pointer-events-none;
   }
   .btn-primary {
-    @apply btn bg-gradient-to-r from-brand-500 to-brand-400 text-slate-900 px-5 py-2.5 rounded-full shadow-lg shadow-brand-500/20 hover:shadow-brand-500/30;
+    @apply btn bg-gradient-to-r from-brand-400 via-brand-500 to-teal-400 text-slate-950 px-5 py-3 shadow-lg shadow-brand-500/25 hover:-translate-y-0.5 hover:shadow-glow;
   }
   .btn-secondary {
-    @apply btn bg-surface-800 text-slate-200 hover:bg-slate-700 border border-slate-700/50 px-5 py-2.5 rounded-xl;
+    @apply btn border border-slate-700/70 bg-white/[0.04] text-slate-200 px-5 py-3 hover:border-brand-400/40 hover:bg-white/[0.08];
   }
   .btn-ghost {
-    @apply btn text-slate-400 hover:text-white hover:bg-white/5 px-4 py-2 rounded-xl;
+    @apply btn px-4 py-2.5 text-slate-400 hover:bg-white/5 hover:text-white;
+  }
+  .btn-danger {
+    @apply btn bg-rose-500/90 px-5 py-3 text-white hover:bg-rose-500 hover:-translate-y-0.5;
   }
   .input {
-    @apply w-full rounded-xl border border-slate-700/80 bg-surface-900/80 px-4 py-3 text-slate-100 placeholder-slate-500 focus:border-brand-500/80 focus:ring-2 focus:ring-brand-500/20 focus:outline-none transition-all duration-200;
+    @apply w-full rounded-2xl border border-slate-700/80 bg-surface-900/80 px-4 py-3 text-slate-100 placeholder-slate-500 shadow-inner shadow-black/10 focus:border-brand-400/80 focus:ring-2 focus:ring-brand-500/20 focus:outline-none transition-all duration-200;
   }
   .card {
-    @apply rounded-2xl border border-slate-800/80 bg-gradient-to-br from-surface-900/60 to-surface-850/40 shadow-card backdrop-blur-md;
+    @apply rounded-[28px] border border-slate-800/80 shadow-card backdrop-blur-md;
+    background-image: linear-gradient(135deg, rgba(15, 23, 42, 0.94), rgba(23, 32, 51, 0.86));
   }
   .card-glass {
-    @apply rounded-2xl border border-slate-700/60 bg-surface-900/70 shadow-card backdrop-blur-xl;
+    @apply rounded-[28px] border border-slate-700/60 bg-surface-900/70 shadow-panel backdrop-blur-xl;
   }
   .card-interactive {
-    @apply card hover:shadow-card-hover hover:border-brand-500/20 transition-all duration-200;
+    @apply card transition-all duration-200 hover:-translate-y-1 hover:border-brand-500/20 hover:shadow-card-hover;
   }
   .link {
     @apply text-brand-400 hover:text-brand-300 underline-offset-2 hover:underline transition-colors;
   }
   .label {
-    @apply block text-sm font-medium text-slate-400 mb-1.5;
+    @apply mb-1.5 block text-sm font-semibold text-slate-400;
   }
   .chip {
-    @apply inline-flex items-center rounded-full border border-slate-700/70 bg-surface-900/80 px-3 py-1 text-xs font-medium text-slate-300;
+    @apply inline-flex items-center rounded-full border border-slate-700/70 bg-surface-900/80 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-slate-300;
   }
   .section-title {
-    @apply text-xl md:text-2xl font-semibold text-white tracking-tight;
+    @apply text-2xl font-semibold tracking-tight text-white md:text-3xl;
+  }
+  .page-shell {
+    @apply space-y-6 md:space-y-8;
+  }
+  .dashboard-hero {
+    @apply card-glass relative overflow-hidden p-6 md:p-8 border-brand-500/15;
+  }
+  .hero-grid {
+    @apply relative flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between;
+  }
+  .tabs-shell {
+    @apply inline-flex flex-wrap gap-2 rounded-[22px] border border-slate-700/70 bg-surface-900/70 p-1.5 shadow-card;
+  }
+  .tab-pill {
+    @apply rounded-2xl px-5 py-2.5 text-sm font-semibold text-slate-400 transition-all duration-200 hover:bg-white/5 hover:text-white;
+  }
+  .tab-pill-active {
+    @apply bg-gradient-to-r from-brand-400 via-brand-500 to-teal-400 text-slate-950 shadow-lg shadow-brand-500/20;
+  }
+  .metric-card {
+    @apply card-interactive relative overflow-hidden p-5 md:p-6;
+  }
+  .badge {
+    @apply inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold;
+  }
+  .badge-info {
+    @apply badge border-brand-400/30 bg-brand-400/10 text-brand-200;
+  }
+  .badge-success {
+    @apply badge border-emerald-400/30 bg-emerald-400/10 text-emerald-200;
+  }
+  .badge-warning {
+    @apply badge border-amber-400/30 bg-amber-400/10 text-amber-200;
+  }
+  .badge-danger {
+    @apply badge border-rose-400/30 bg-rose-400/10 text-rose-200;
+  }
+  .badge-neutral {
+    @apply badge border-slate-600/70 bg-slate-800/70 text-slate-300;
+  }
+  .table-shell {
+    @apply card overflow-hidden border-slate-700/50;
+  }
+  .table-wrap {
+    @apply overflow-x-auto;
+  }
+  .table-base {
+    @apply w-full min-w-[640px] text-left;
+  }
+  .table-head {
+    @apply bg-white/[0.04] text-xs font-semibold uppercase tracking-[0.18em] text-slate-400;
+  }
+  .table-head th {
+    @apply px-4 py-4;
+  }
+  .table-row {
+    @apply border-t border-slate-800/80 transition-colors hover:bg-white/[0.03];
+  }
+  .table-row td {
+    @apply px-4 py-4 align-top;
+  }
+  .empty-state {
+    @apply card p-8 text-center text-slate-400;
+  }
+  .file-input {
+    @apply block w-full rounded-2xl border border-dashed border-slate-600/70 bg-surface-900/60 px-4 py-3 text-sm text-slate-300 file:mr-3 file:rounded-xl file:border-0 file:bg-brand-500/20 file:px-4 file:py-2 file:font-semibold file:text-brand-100 file:cursor-pointer hover:border-brand-400/35;
+  }
+  .kpi-value {
+    @apply mt-3 font-display text-3xl font-bold tracking-tight text-white md:text-4xl;
+  }
+  .subtle-divider {
+    @apply h-px w-full bg-gradient-to-r from-transparent via-slate-700/70 to-transparent;
   }
 }
 

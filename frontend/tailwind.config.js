@@ -4,8 +4,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
-        display: ['Inter', 'system-ui', 'sans-serif'],
+        sans: ['Manrope', 'system-ui', 'sans-serif'],
+        display: ['Space Grotesk', 'Manrope', 'system-ui', 'sans-serif'],
       },
       colors: {
         brand: {
@@ -21,6 +21,7 @@ export default {
           900: '#164e63',
         },
         surface: {
+          750: '#243246',
           800: '#1e293b',
           850: '#172033',
           900: '#0f172a',
@@ -30,11 +31,13 @@ export default {
       backgroundImage: {
         'gradient-mesh': 'radial-gradient(ellipse 80% 50% at 50% -20%, rgba(6, 182, 212, 0.15), transparent), radial-gradient(ellipse 60% 40% at 100% 0%, rgba(6, 182, 212, 0.08), transparent), radial-gradient(ellipse 50% 30% at 0% 50%, rgba(6, 182, 212, 0.06), transparent)',
         'gradient-auth': 'radial-gradient(ellipse 100% 80% at 50% -30%, rgba(6, 182, 212, 0.2), transparent 50%), radial-gradient(ellipse 80% 60% at 100% 100%, rgba(6, 182, 212, 0.08), transparent 40%)',
+        'gradient-panel': 'linear-gradient(135deg, rgba(15, 23, 42, 0.94), rgba(23, 32, 51, 0.86))',
       },
       boxShadow: {
         'glow': '0 0 40px -12px rgba(6, 182, 212, 0.25)',
         'card': '0 4px 24px -4px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.04)',
         'card-hover': '0 12px 40px -12px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(6, 182, 212, 0.15)',
+        'panel': '0 24px 80px -36px rgba(2, 6, 23, 0.85)',
       },
       animation: {
         'fade-in': 'fadeIn 0.3s ease-out',

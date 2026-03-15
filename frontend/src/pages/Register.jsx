@@ -30,16 +30,16 @@ export default function Register() {
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 py-12 bg-surface-950 bg-gradient-auth">
-      <div className="w-full max-w-[440px] animate-slide-up">
+      <div className="w-full max-w-[520px] animate-slide-up">
         <div className="card-glass p-8 md:p-10 border-brand-500/15">
           <div className="text-center mb-8">
             <img src="/logo.svg" alt="CaseMate" className="w-24 h-auto mx-auto mb-3" />
-            <h1 className="font-display text-3xl font-bold tracking-tight text-white">CaseMate</h1>
-            <p className="text-slate-400 mt-1.5 text-sm">Create your account</p>
+            <h1 className="font-display text-3xl font-bold tracking-tight text-white">Create your account</h1>
+            <p className="text-slate-400 mt-1.5 text-sm">Start with a client or lawyer workspace.</p>
           </div>
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
-              <div className="rounded-xl bg-red-500/10 border border-red-500/20 px-4 py-2.5 text-red-400 text-sm">
+              <div className="rounded-2xl bg-red-500/10 border border-red-500/20 px-4 py-2.5 text-red-400 text-sm">
                 {error}
               </div>
             )}
@@ -104,13 +104,14 @@ export default function Register() {
             </div>
             <button
               type="submit"
-              className="btn-primary w-full py-3 rounded-xl text-base font-semibold mt-2"
+              className="btn-primary w-full text-base mt-2"
               disabled={loading}
             >
               {loading ? 'Creating account...' : 'Create account'}
             </button>
           </form>
-          <p className="mt-6 text-center text-slate-400 text-sm">
+          <div className="my-6 subtle-divider" />
+          <p className="text-center text-slate-400 text-sm">
             Already have an account?{' '}
             <Link to="/login" className="link font-medium text-brand-400">Sign in</Link>
           </p>

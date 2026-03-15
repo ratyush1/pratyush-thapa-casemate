@@ -35,22 +35,37 @@ export default function AdminStats() {
   if (!stats) return null;
 
   const cards = [
-    { label: 'Total users', value: stats.users },
-    { label: 'Lawyers', value: stats.lawyers },
-    { label: 'Appointments', value: stats.appointments },
-    { label: 'Payments', value: stats.payments },
-    { label: 'Chats', value: stats.chats },
-    { label: 'Revenue (NPR)', value: Number(stats.revenue).toFixed(2) },
+    { label: 'Total users', value: stats.users, tone: 'info', note: 'Clients, lawyers, and admin accounts' },
+    { label: 'Lawyers', value: stats.lawyers, tone: 'success', note: 'Professionals available for booking' },
+    { label: 'Appointments', value: stats.appointments, tone: 'warning', note: 'All requests and completed sessions' },
+    { label: 'Payments', value: stats.payments, tone: 'info', note: 'Tracked payment records' },
+    { label: 'Chats', value: stats.chats, tone: 'success', note: 'Conversation timelines created' },
+    { label: 'Revenue (NPR)', value: Number(stats.revenue).toFixed(2), tone: 'warning', note: 'Completed payment volume' },
   ];
 
   return (
-    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="space-y-5">
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <p className="text-xs uppercase tracking-[0.2em] text-slate-500">Platform overview</p>
+          <h2 className="mt-2 section-title">Key platform metrics</h2>
+        </div>
+        <span className="badge-neutral">Live refresh enabled</span>
+      </div>
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {cards.map((c) => (
-        <div key={c.label} className="card-interactive p-5">
-          <p className="text-slate-400 text-sm font-medium">{c.label}</p>
-          <p className="text-2xl font-bold text-white mt-1">{c.value}</p>
+        <div key={c.label} className="metric-card">
+          <div className="flex items-center justify-between gap-3">
+            <p className="text-sm font-medium text-slate-400">{c.label}</p>
+            <span className={c.tone === 'success' ? 'badge-success' : c.tone === 'warning' ? 'badge-warning' : 'badge-info'}>
+              {c.tone}
+            </span>
+          </div>
+          <p className="kpi-value">{c.value}</p>
+          <p className="mt-3 text-sm leading-relaxed text-slate-400">{c.note}</p>
         </div>
       ))}
+      </div>
     </div>
   );
 }

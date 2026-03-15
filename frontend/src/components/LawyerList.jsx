@@ -60,7 +60,7 @@ export default function LawyerList({ onSelect, recommendationContext }) {
   return (
     <div className="space-y-6">
       {recommendationMeta.enabled && (
-        <div className="card border-brand-500/30 bg-brand-500/10 p-4">
+        <div className="card border-brand-500/30 bg-brand-500/10 p-5">
           <p className="text-sm text-brand-200 font-medium">
             Recommended order based on your case
             {recommendationMeta.inferredArea ? ` (${recommendationMeta.inferredArea})` : ''}.
@@ -68,23 +68,24 @@ export default function LawyerList({ onSelect, recommendationContext }) {
           <p className="text-xs text-slate-300 mt-1">Top results are ranked by specialization match, verification, experience, and rating.</p>
         </div>
       )}
-      <div className="flex flex-wrap gap-3 items-center">
-        <input
-          type="text"
-          placeholder="Search lawyer by name, email, or specialization"
-          className="input max-w-xs rounded-xl"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-        <label className="flex items-center gap-2 text-slate-400 text-sm cursor-pointer">
+      <div className="card p-4 md:p-5 border-slate-700/50">
+        <div className="flex flex-wrap gap-3 items-center">
           <input
-            type="checkbox"
-            checked={verified === 'true'}
-            onChange={(e) => setVerified(e.target.checked ? 'true' : '')}
-            className="rounded border-slate-600 bg-surface-800 text-brand-500 focus:ring-brand-500/30"
+            type="text"
+            placeholder="Search lawyer by name, email, or specialization"
+            className="input max-w-xs rounded-xl"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
           />
-          Verified only
-        </label>
+          <label className="flex items-center gap-2 text-slate-400 text-sm cursor-pointer rounded-2xl border border-slate-700/70 bg-white/[0.03] px-4 py-3">
+            <input
+              type="checkbox"
+              checked={verified === 'true'}
+              onChange={(e) => setVerified(e.target.checked ? 'true' : '')}
+              className="rounded border-slate-600 bg-surface-800 text-brand-500 focus:ring-brand-500/30"
+            />
+            Verified only
+          </label>
         {activeCaseArea && (
           <button
             type="button"
@@ -98,10 +99,11 @@ export default function LawyerList({ onSelect, recommendationContext }) {
             {specializedOnly ? 'Showing case specialists' : 'Specialized to this case only'}
           </button>
         )}
+        </div>
       </div>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {displayedLawyers.map((l) => (
-          <div key={l._id} className="card-interactive p-5">
+          <div key={l._id} className="metric-card">
             <div className="flex justify-between items-start gap-3">
               <div className="min-w-0 flex items-center gap-3">
                 <img
@@ -116,12 +118,12 @@ export default function LawyerList({ onSelect, recommendationContext }) {
               </div>
               <div className="shrink-0 flex flex-col items-end gap-2">
                 {l.profile?.verified && (
-                  <span className="text-xs font-medium bg-brand-500/20 text-brand-400 px-2.5 py-1 rounded-lg">
+                  <span className="badge-info">
                     Verified
                   </span>
                 )}
                 {recommendationMeta.enabled && Number(l.recommendationScore || 0) > 0 && (
-                  <span className="text-[11px] font-semibold bg-emerald-500/20 text-emerald-300 px-2 py-1 rounded-lg">
+                  <span className="badge-success">
                     Match {Math.min(99, Math.max(1, Math.round(l.recommendationScore)))}%
                   </span>
                 )}
@@ -134,7 +136,7 @@ export default function LawyerList({ onSelect, recommendationContext }) {
               <p className="text-emerald-300/90 text-xs mt-2">{l.recommendationReasons[0]}</p>
             )}
             {l.profile?.bio && <p className="text-slate-500 text-sm mt-1 line-clamp-2">{l.profile.bio}</p>}
-            <p className="text-brand-400 font-semibold mt-3">NPR {l.profile?.hourlyRate || 0}/hr</p>
+            <p className="text-brand-300 font-semibold mt-4">NPR {l.profile?.hourlyRate || 0}/hr</p>
             <button type="button" onClick={() => onSelect(l)} className="btn-primary w-full mt-4 rounded-xl text-sm">
               Book appointment
             </button>

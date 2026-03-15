@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import api from '../api/axios';
 
+const roleBadgeClass = {
+  client: 'badge-info',
+  lawyer: 'badge-success',
+  admin: 'badge-warning',
+};
+
 export default function AdminUsers() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -53,7 +59,12 @@ export default function AdminUsers() {
 
   return (
     <div className="space-y-4">
-      <div className="flex gap-3">
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <p className="text-xs uppercase tracking-[0.2em] text-slate-500">User management</p>
+          <h2 className="mt-2 section-title">Accounts</h2>
+          <p className="mt-2 text-sm text-slate-400">Filter by role and activate or deactivate accounts without leaving the dashboard.</p>
+        </div>
         <select className="input w-auto max-w-[180px] rounded-xl" value={roleFilter} onChange={(e) => setRoleFilter(e.target.value)}>
           <option value="nonadmin">Clients & Lawyers</option>
           <option value="">All roles</option>
@@ -62,25 +73,30 @@ export default function AdminUsers() {
           <option value="admin">Admin</option>
         </select>
       </div>
-      <div className="card overflow-hidden border-slate-700/50">
-        <table className="w-full text-left">
-          <thead className="bg-surface-800/80">
+      <div className="table-shell">
+        <div className="table-wrap">
+          <table className="table-base">
+          <thead className="table-head">
             <tr>
-              <th className="p-4 text-slate-300 font-medium text-sm">Name</th>
-              <th className="p-4 text-slate-300 font-medium text-sm">Email</th>
-              <th className="p-4 text-slate-300 font-medium text-sm">Role</th>
-              <th className="p-4 text-slate-300 font-medium text-sm">Active</th>
-              <th className="p-4 text-slate-300 font-medium text-sm">Actions</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Active</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
             {users.map((u) => (
-              <tr key={u._id} className="border-t border-slate-800/80 hover:bg-white/[0.02] transition-colors">
-                <td className="p-4 text-white font-medium">{u.name}</td>
-                <td className="p-4 text-slate-400">{u.email}</td>
-                <td className="p-4 text-slate-400 capitalize">{u.role}</td>
-                <td className="p-4">{u.isActive ? <span className="text-emerald-400">Yes</span> : <span className="text-slate-500">No</span>}</td>
-                <td className="p-4">
+              <tr key={u._id} className="table-row">
+                <td>
+                  <div className="font-semibold text-white">{u.name}</div>
+                </td>
+                <td className="text-slate-400">{u.email}</td>
+                <td>
+                  <span className={roleBadgeClass[u.role] || 'badge-neutral'}>{u.role}</span>
+                </td>
+                <td>{u.isActive ? <span className="badge-success">Active</span> : <span className="badge-neutral">Inactive</span>}</td>
+                <td>
                   <button type="button" onClick={() => toggleActive(u)} className="btn-ghost text-sm rounded-xl">
                     {u.isActive ? 'Deactivate' : 'Activate'}
                   </button>
@@ -89,6 +105,8 @@ export default function AdminUsers() {
             ))}
           </tbody>
         </table>
+        </div>
+        {users.length === 0 && <div className="p-8 text-center text-slate-500">No users found for the selected filter.</div>}
       </div>
     </div>
   );

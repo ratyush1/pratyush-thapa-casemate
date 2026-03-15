@@ -51,36 +51,40 @@ export default function AdminLawyers() {
 
   return (
     <div className="space-y-4">
-      <p className="text-slate-400 text-sm">
-        Review lawyers and their submitted documents. Verify a lawyer after checking their documents.
-      </p>
-      <div className="card overflow-hidden border-slate-700/50">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left min-w-[640px]">
-            <thead className="bg-surface-800/80">
+      <div>
+        <p className="text-xs uppercase tracking-[0.2em] text-slate-500">Verification queue</p>
+        <h2 className="mt-2 section-title">Lawyers and documents</h2>
+        <p className="mt-2 text-sm text-slate-400">Review submitted proof, then verify lawyers once their documents are complete.</p>
+      </div>
+      <div className="table-shell">
+        <div className="table-wrap">
+          <table className="table-base">
+            <thead className="table-head">
               <tr>
-                <th className="p-4 text-slate-300 font-medium text-sm">Lawyer</th>
-                <th className="p-4 text-slate-300 font-medium text-sm">Email</th>
-                <th className="p-4 text-slate-300 font-medium text-sm">Documents</th>
-                <th className="p-4 text-slate-300 font-medium text-sm">Verified</th>
-                <th className="p-4 text-slate-300 font-medium text-sm">Action</th>
+                <th>Lawyer</th>
+                <th>Email</th>
+                <th>Documents</th>
+                <th>Verified</th>
+                <th>Action</th>
               </tr>
             </thead>
             <tbody>
               {lawyers.map((l) => (
-                <tr key={l.user?._id} className="border-t border-slate-800/80 hover:bg-white/[0.02] transition-colors">
-                  <td className="p-4 text-white font-medium">{l.user?.name}</td>
-                  <td className="p-4 text-slate-400">{l.user?.email}</td>
-                  <td className="p-4">
+                <tr key={l.user?._id} className="table-row">
+                  <td>
+                    <div className="font-semibold text-white">{l.user?.name}</div>
+                  </td>
+                  <td className="text-slate-400">{l.user?.email}</td>
+                  <td>
                     {(l.documents && l.documents.length > 0) ? (
-                      <ul className="space-y-1">
+                      <ul className="space-y-2">
                         {l.documents.map((doc, i) => {
                           const viewUrl = getDocumentViewUrl(doc.url);
                           return (
-                            <li key={i}>
-                              <span className="text-slate-300">{doc.name}</span>
+                            <li key={i} className="rounded-2xl border border-slate-700/60 bg-white/[0.03] px-3 py-2">
+                              <span className="block text-slate-200 font-medium">{doc.name}</span>
                               {viewUrl ? (
-                                <a href={viewUrl} target="_blank" rel="noopener noreferrer" className="block text-brand-400 text-xs hover:underline">
+                                <a href={viewUrl} target="_blank" rel="noopener noreferrer" className="mt-1 inline-flex text-brand-400 text-xs font-semibold hover:underline">
                                   View
                                 </a>
                               ) : (
@@ -91,17 +95,17 @@ export default function AdminLawyers() {
                         })}
                       </ul>
                     ) : (
-                      <span className="text-amber-400/90 text-sm">At least one document required</span>
+                      <span className="badge-warning">Document required</span>
                     )}
                   </td>
-                  <td className="p-4">
+                  <td>
                     {l.verified || l.profile?.verified ? (
-                      <span className="text-emerald-400">Yes</span>
+                      <span className="badge-success">Verified</span>
                     ) : (
-                      <span className="text-slate-500">No</span>
+                      <span className="badge-neutral">Pending</span>
                     )}
                   </td>
-                  <td className="p-4">
+                  <td>
                     {!(l.verified || l.profile?.verified) && (
                       (l.documents && l.documents.length > 0) ? (
                         <button type="button" onClick={() => verify(l.user._id)} className="btn-primary text-sm rounded-xl">

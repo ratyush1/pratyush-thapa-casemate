@@ -18,7 +18,17 @@ function DashboardRedirect() {
 
 function PrivateRoute({ children, roles }) {
   const { user, loading } = useAuth();
-  if (loading) return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center px-4">
+        <div className="card-glass w-full max-w-md p-8 text-center">
+          <div className="mx-auto mb-4 h-12 w-12 rounded-2xl bg-brand-500/15 border border-brand-400/20" />
+          <p className="font-display text-xl text-white">Loading workspace</p>
+          <p className="mt-2 text-sm text-slate-400">Preparing your dashboard and syncing your account.</p>
+        </div>
+      </div>
+    );
+  }
   if (!user) return <Navigate to="/login" replace />;
   if (roles && !roles.includes(user.role)) return <Navigate to="/" replace />;
   return children;

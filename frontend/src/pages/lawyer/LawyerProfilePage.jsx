@@ -58,17 +58,19 @@ export default function LawyerProfilePage() {
         </div>
       </div>
 
-      <div className="card-glass p-6">
-        <h3 className="font-semibold text-white mb-3">Overview</h3>
-        <p className="text-slate-400">Specialization: {profile.specialization?.join(', ') || '—'}</p>
-        <p className="text-slate-500 mt-2">{profile.bio || 'No bio yet.'}</p>
-        <p className="text-brand-400 font-semibold mt-3">NPR {profile.hourlyRate || 0}/hr</p>
-      </div>
+      <div className="grid gap-4 lg:grid-cols-2">
+        <div className="metric-card">
+          <h3 className="font-semibold text-white mb-3">Overview</h3>
+          <p className="text-slate-400">Specialization: {profile.specialization?.join(', ') || '—'}</p>
+          <p className="text-slate-500 mt-2 leading-relaxed">{profile.bio || 'No bio yet.'}</p>
+          <p className="text-brand-300 font-semibold mt-4">NPR {profile.hourlyRate || 0}/hr</p>
+        </div>
 
-      <div className="card-glass p-6">
-        <h3 className="font-semibold text-white mb-3">Availability</h3>
-        <p className="text-slate-400">Days: {profile.availability?.days?.join(', ') || '—'}</p>
-        <p className="text-slate-400">Time: {profile.availability?.startTime || '—'} {profile.availability?.endTime ? `- ${profile.availability.endTime}` : ''}</p>
+        <div className="metric-card">
+          <h3 className="font-semibold text-white mb-3">Availability</h3>
+          <p className="text-slate-400">Days: {profile.availability?.days?.join(', ') || '—'}</p>
+          <p className="text-slate-400 mt-2">Time: {profile.availability?.startTime || '—'} {profile.availability?.endTime ? `- ${profile.availability.endTime}` : ''}</p>
+        </div>
       </div>
 
       <div className="card-glass p-6">
@@ -76,7 +78,7 @@ export default function LawyerProfilePage() {
         {profile.documents?.length ? (
           <ul className="space-y-2">
             {profile.documents.map((d, i) => (
-              <li key={i} className="flex items-center justify-between">
+              <li key={i} className="flex items-center justify-between rounded-[22px] border border-slate-700/60 bg-white/[0.03] px-4 py-3">
                 <div>
                   <div className="font-medium text-white">{d.name}</div>
                   {d.url ? <a href={d.url} target="_blank" rel="noreferrer" className="text-sm text-brand-400">View</a> : <div className="text-sm text-slate-500">No link</div>}

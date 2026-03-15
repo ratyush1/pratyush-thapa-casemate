@@ -49,17 +49,21 @@ export default function BookAppointment({ lawyer, onDone, onBack }) {
   };
 
   return (
-    <div className="card p-6 md:p-8 max-w-lg border-slate-700/50 animate-slide-up">
+    <div className="card p-6 md:p-8 max-w-2xl border-slate-700/50 animate-slide-up">
       <button type="button" onClick={onBack} className="text-slate-400 hover:text-white text-sm font-medium mb-6 transition-colors">
         ← Back to lawyers
       </button>
-      <h2 className="font-display text-xl font-bold text-white mb-1">Book consultation</h2>
-      <p className="text-slate-400 text-sm mb-6">
-        {lawyer.name} · NPR {lawyer.profile?.hourlyRate || 0}/hr · {lawyer.profile?.specialization?.join(', ')}
-      </p>
-      <form onSubmit={handleSubmit} className="space-y-5">
+      <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
+        <div className="rounded-[24px] border border-slate-700/70 bg-white/[0.03] p-5">
+          <p className="text-xs uppercase tracking-[0.2em] text-slate-500">Selected lawyer</p>
+          <h2 className="mt-3 font-display text-2xl font-bold text-white">{lawyer.name}</h2>
+          <p className="text-brand-300 font-semibold mt-3">NPR {lawyer.profile?.hourlyRate || 0}/hr</p>
+          <p className="text-slate-400 text-sm mt-3 leading-relaxed">{lawyer.profile?.specialization?.join(', ') || 'General legal practice'}</p>
+          <p className="text-slate-500 text-sm mt-5">Attach at least one document so the lawyer can review your case before accepting.</p>
+        </div>
+        <form onSubmit={handleSubmit} className="space-y-5">
         {error && (
-          <div className="rounded-xl bg-red-500/10 border border-red-500/20 px-4 py-2.5 text-red-400 text-sm">
+          <div className="rounded-2xl bg-red-500/10 border border-red-500/20 px-4 py-2.5 text-red-400 text-sm">
             {error}
           </div>
         )}
@@ -86,7 +90,7 @@ export default function BookAppointment({ lawyer, onDone, onBack }) {
         </div>
         <div>
           <label className="label">Attach document (required)</label>
-          <input type="file" accept="application/pdf,image/*" onChange={(e) => setDocumentFile(e.target.files?.[0] || null)} required />
+          <input type="file" accept="application/pdf,image/*" onChange={(e) => setDocumentFile(e.target.files?.[0] || null)} className="file-input" required />
           {documentFile && <p className="text-sm text-slate-400 mt-2">Selected: {documentFile.name}</p>}
         </div>
         <div className="flex gap-3 pt-2">
@@ -95,7 +99,8 @@ export default function BookAppointment({ lawyer, onDone, onBack }) {
             {loading ? 'Booking...' : 'Book appointment'}
           </button>
         </div>
-      </form>
+        </form>
+      </div>
     </div>
   );
 }

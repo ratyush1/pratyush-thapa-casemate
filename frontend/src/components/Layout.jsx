@@ -86,33 +86,33 @@ export default function Layout() {
   return (
     <div className="min-h-screen flex flex-col bg-surface-950 bg-gradient-mesh text-slate-100">
       <header className="sticky top-0 z-20 border-b border-slate-800/60 bg-surface-950/80 backdrop-blur-xl shadow-[0_8px_30px_rgba(2,6,23,0.35)]">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex min-h-[76px] flex-wrap items-center justify-between gap-4 py-3">
           <div className="flex items-center gap-4">
             <NavLink to={dashboardPath} className="flex items-center gap-3">
               <img src="/logo.svg" alt="CaseMate" className="w-24 h-auto" />
             </NavLink>
             {user?.role !== 'lawyer' && (
-              <div className="hidden md:flex items-center bg-surface-900/60 border border-slate-800/60 rounded-full px-3 py-1 gap-2">
+              <div className="hidden lg:flex items-center rounded-full border border-slate-800/60 bg-surface-900/60 px-3 py-1 gap-2 shadow-inner shadow-black/10">
                 <svg className="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-4.35-4.35"/></svg>
                 <input className="bg-transparent outline-none text-sm placeholder:text-slate-500" placeholder="Search lawyers, cases..." />
               </div>
             )}
           </div>
-          <nav className="flex items-center gap-3">
-            <NavLink to={dashboardPath} className={({ isActive }) => `px-4 py-2 rounded-full text-sm font-medium transition ${isActive ? 'bg-gradient-to-r from-brand-500 to-brand-400 text-slate-900 shadow-lg shadow-brand-500/20' : 'text-slate-300 hover:bg-white/5'}`}>
+          <nav className="flex flex-wrap items-center justify-end gap-3">
+            <NavLink to={dashboardPath} className={({ isActive }) => `tab-pill ${isActive ? 'tab-pill-active' : ''}`}>
               Dashboard
             </NavLink>
             {unreadCount > 0 && user?.role === 'lawyer' && (
-              <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs bg-rose-500 text-white">{unreadCount}</span>
+              <span className="badge-danger">{unreadCount} unread</span>
             )}
-            <div className="mx-2 h-6 w-px bg-slate-700" aria-hidden />
-            <div className="flex items-center gap-3">
-              <div className="hidden sm:flex flex-col text-right mr-2">
-                <span className="text-sm text-slate-200">Welcome</span>
-                <span className="text-sm font-semibold text-white truncate max-w-[160px]">{user?.name}</span>
+            <div className="hidden md:block mx-1 h-8 w-px bg-slate-700" aria-hidden />
+            <div className="flex items-center gap-3 rounded-full border border-slate-800/70 bg-white/[0.03] pl-2 pr-2 py-1.5">
+              <div className="hidden sm:flex flex-col text-right mr-1">
+                <span className="text-xs uppercase tracking-[0.18em] text-slate-500">Signed in</span>
+                <span className="text-sm font-semibold text-white truncate max-w-[180px]">{user?.name}</span>
               </div>
-              <div className="text-xs text-slate-400 hidden sm:block capitalize">{user?.role}</div>
-              <div className="w-10 h-10 rounded-full bg-surface-800 border border-slate-600/70 overflow-hidden shadow-lg shadow-black/30">
+              <div className="badge-neutral hidden md:inline-flex capitalize">{user?.role}</div>
+              <div className="w-11 h-11 rounded-2xl bg-surface-800 border border-slate-600/70 overflow-hidden shadow-lg shadow-black/30">
                 <img src={avatarUrl} alt="avatar" className="w-full h-full object-cover" />
               </div>
               <button type="button" onClick={() => { logout(); navigate('/'); }} className="btn-ghost text-sm text-slate-300">
@@ -135,7 +135,7 @@ export default function Layout() {
           </div>
         </div>
       )}
-      <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-10">
         <Outlet />
       </main>
       <Footer />

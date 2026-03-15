@@ -128,10 +128,13 @@ export default function ChatBot({ onBookLawyer }) {
   }
 
   return (
-    <div className="card overflow-hidden flex flex-col md:flex-row border-slate-700/50 min-h-[420px]">
-      <div className="w-full md:w-72 border-b md:border-b-0 md:border-r border-slate-800/80 flex flex-col bg-surface-900/30">
+    <div className="card overflow-hidden flex flex-col md:flex-row border-slate-700/50 min-h-[520px]">
+      <div className="w-full md:w-80 border-b md:border-b-0 md:border-r border-slate-800/80 flex flex-col bg-surface-900/30">
         <div className="p-4 border-b border-slate-800/80 flex justify-between items-center">
-          <span className="font-semibold text-slate-200">Conversations</span>
+          <div>
+            <p className="text-xs uppercase tracking-[0.2em] text-slate-500">AI assistant</p>
+            <span className="font-semibold text-slate-200">Conversations</span>
+          </div>
           <button type="button" onClick={createChat} className="btn-primary text-sm py-2 px-4 rounded-xl" disabled={sending}>
             New chat
           </button>
@@ -146,11 +149,11 @@ export default function ChatBot({ onBookLawyer }) {
               type="button"
               onClick={() => openChat(ch)}
               className={`w-full text-left px-4 py-3 text-sm border-b border-slate-800/50 hover:bg-white/5 transition-colors ${
-                currentChat?._id === ch._id ? 'bg-brand-500/15 text-brand-400 border-l-2 border-l-brand-500 md:border-l-0' : 'text-slate-300'
+                currentChat?._id === ch._id ? 'bg-brand-500/15 text-brand-300' : 'text-slate-300'
               }`}
             >
-              <span className="truncate block">{ch.title || 'New chat'}</span>
-              {ch.escalationSuggested && <span className="text-amber-400 text-xs"> · Suggest lawyer</span>}
+              <span className="truncate block font-medium">{ch.title || 'New chat'}</span>
+              {ch.escalationSuggested && <span className="text-amber-400 text-xs">Suggest lawyer</span>}
             </button>
           ))}
         </div>
@@ -158,7 +161,7 @@ export default function ChatBot({ onBookLawyer }) {
       <div className="flex-1 flex flex-col min-h-[320px] bg-surface-950/30">
         {!currentChat ? (
           <div className="flex-1 flex items-center justify-center p-8 text-center">
-            <div>
+            <div className="max-w-md">
               <p className="text-slate-400 mb-2">Select a conversation or start a new one.</p>
               <p className="text-slate-500 text-sm">Ask legal questions here. If the AI suggests it, use the Find Lawyers tab to book a consultation.</p>
             </div>
@@ -169,9 +172,9 @@ export default function ChatBot({ onBookLawyer }) {
               {currentChat.messages?.map((msg, i) => (
                 <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                   <div
-                    className={`max-w-[85%] rounded-2xl px-4 py-3 ${
+                    className={`max-w-[85%] rounded-[24px] px-4 py-3 shadow-sm ${
                       msg.role === 'user'
-                        ? 'bg-brand-500 text-white shadow-lg shadow-brand-500/20'
+                        ? 'bg-gradient-to-r from-brand-400 to-brand-500 text-slate-950 shadow-lg shadow-brand-500/20'
                         : 'bg-surface-800/80 text-slate-200 border border-slate-700/50'
                     }`}
                   >
@@ -196,7 +199,7 @@ export default function ChatBot({ onBookLawyer }) {
             </div>
             <div className="p-4 border-t border-slate-800/80 flex gap-3 bg-surface-900/30 items-end">
               <div className="flex-1 space-y-2">
-                <label className="block text-xs text-slate-400">Choose your case type (optional, from legal docs)</label>
+                <label className="block text-xs uppercase tracking-[0.18em] text-slate-500">Choose your case type (optional)</label>
                 <select
                   className="input w-full rounded-xl"
                   value={selectedCaseId}

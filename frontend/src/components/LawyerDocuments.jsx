@@ -107,7 +107,7 @@ export default function LawyerDocuments() {
 
   return (
     <div className="space-y-6">
-      <div className="rounded-xl bg-amber-500/10 border border-amber-500/30 px-4 py-3">
+      <div className="rounded-[24px] bg-amber-500/10 border border-amber-500/30 px-4 py-4">
         <p className="text-amber-200 text-sm font-medium">
           At least one document is required for admin verification. Upload a file (PDF, image) or add a link.
         </p>
@@ -136,7 +136,7 @@ export default function LawyerDocuments() {
               id="doc-file-input"
               type="file"
               accept=".pdf,image/jpeg,image/png,image/gif,image/webp"
-              className="block w-full text-sm text-slate-400 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-brand-500/20 file:text-brand-400 file:font-medium file:cursor-pointer"
+              className="file-input"
               onChange={(e) => setFile(e.target.files?.[0] || null)}
             />
           </div>
@@ -186,11 +186,11 @@ export default function LawyerDocuments() {
             {documents.map((doc, index) => {
               const viewUrl = getDocumentViewUrl(doc.url);
               return (
-                <li key={index} className="flex flex-wrap items-center justify-between gap-3 p-3 rounded-xl bg-surface-800/50 border border-slate-700/50">
+                <li key={index} className="flex flex-wrap items-center justify-between gap-3 p-4 rounded-[22px] bg-surface-800/50 border border-slate-700/50">
                   <div>
                     <span className="font-medium text-slate-200">{doc.name}</span>
                     {viewUrl ? (
-                      <a href={viewUrl} target="_blank" rel="noopener noreferrer" className="block text-brand-400 text-sm hover:underline mt-0.5">
+                      <a href={viewUrl} target="_blank" rel="noopener noreferrer" className="mt-1 inline-flex text-brand-400 text-sm hover:underline">
                         View document
                       </a>
                     ) : (

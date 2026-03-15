@@ -3,6 +3,18 @@ import api from '../api/axios';
 import AppointmentChat from './AppointmentChat';
 import { io } from 'socket.io-client';
 
+const getStatusBadge = (status) => {
+  if (status === 'accepted' || status === 'completed') return 'badge-success';
+  if (status === 'rejected' || status === 'cancelled') return 'badge-danger';
+  return 'badge-warning';
+};
+
+const getPaymentBadge = (status) => {
+  if (status === 'paid') return 'badge-success';
+  if (status === 'refunded') return 'badge-danger';
+  return 'badge-warning';
+};
+
 export default function AppointmentsList() {
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -259,39 +271,40 @@ export default function AppointmentsList() {
   return (
     <div className="grid gap-4">
       {appointments.map((apt) => (
-        <div key={apt._id} className="card-interactive p-5 flex flex-wrap justify-between items-center gap-4">
+        <div key={apt._id} className="metric-card flex flex-wrap justify-between items-start gap-4">
           <div className="min-w-0 flex-1">
-            <p className="font-semibold text-white">Lawyer: {apt.lawyer?.name}</p>
-            <p className="text-slate-400 text-sm mt-0.5">
+            <div className="flex flex-wrap items-center gap-2">
+              <p className="font-semibold text-white">{apt.lawyer?.name}</p>
+              <span className={getStatusBadge(apt.status)}>{apt.status}</span>
+              <span className={getPaymentBadge(apt.paymentStatus)}>{apt.paymentStatus}</span>
+            </div>
+            <p className="text-slate-400 text-sm mt-1.5">
               {new Date(apt.date).toLocaleDateString()} · {apt.timeSlot} · NPR {apt.amount}
-            </p>
-            <p className="text-slate-500 text-sm mt-1">
-              Status: <span className="capitalize text-slate-400">{apt.status}</span> · Payment: <span className="capitalize text-slate-400">{apt.paymentStatus}</span>
             </p>
             {apt.caseDetails && <p className="text-slate-500 text-sm mt-2 line-clamp-2">{apt.caseDetails}</p>}
             {apt.caseDocuments && apt.caseDocuments.length > 0 && (
-              <div className="mt-2">
+              <div className="mt-3 flex flex-wrap gap-2">
                 {apt.caseDocuments.map((doc, i) => {
                   return (
                     <button
                       key={i}
                       type="button"
                       onClick={() => downloadDocument(apt._id, doc, i)}
-                      className="text-teal-400 text-sm block hover:underline"
+                      className="badge-neutral hover:text-white"
                     >
-                      View document {i + 1}
+                      Document {i + 1}
                     </button>
                   );
                 })}
               </div>
             )}
             {uploadingApt === apt._id && (
-              <div className="mt-3 p-3 bg-surface-800 rounded-xl border border-slate-700/50 space-y-2">
+              <div className="mt-4 rounded-[22px] border border-slate-700/60 bg-white/[0.03] p-4 space-y-3">
                 <input 
                   type="file" 
                   accept="application/pdf,image/*"
                   onChange={(e) => setUploadFile(e.target.files?.[0] || null)}
-                  className="text-sm text-slate-400"
+                  className="file-input"
                 />
                 {uploadFile && <p className="text-sm text-slate-400">Selected: {uploadFile.name}</p>}
                 <div className="flex gap-2">
@@ -317,20 +330,20 @@ export default function AppointmentsList() {
               <button 
                 type="button"
                 onClick={() => setUploadingApt(apt._id)}
-                className="text-teal-400 text-sm mt-2 hover:underline"
+                className="mt-3 badge-info"
               >
-                + Add document
+                Add document
               </button>
             )}
           </div>
-          <div className="flex gap-2 items-center">
+          <div className="flex flex-wrap gap-2 items-center justify-end">
             {apt.paymentStatus === 'pending' && apt.status !== 'rejected' && apt.status !== 'cancelled' && (
               <button type="button" onClick={() => pay(apt)} className="btn-primary rounded-xl text-sm shrink-0" disabled={payingAppointmentId === apt._id}>
                 {payingAppointmentId === apt._id ? 'Redirecting...' : 'Pay with eSewa'}
               </button>
             )}
             {apt.status === 'accepted' ? (
-              <button type="button" onClick={() => setActiveChat(apt)} className="btn-ghost rounded-xl text-sm">
+              <button type="button" onClick={() => setActiveChat(apt)} className="btn-secondary rounded-xl text-sm">
                 Open chat
               </button>
             ) : (
