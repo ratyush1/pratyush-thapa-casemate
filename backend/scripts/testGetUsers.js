@@ -1,0 +1,38 @@
+const http = require('http');
+
+const run = (path, token) => new Promise((resolve) => {
+  const options = { hostname: 'localhost', port: 5000, path, method: 'GET', headers: token ? { Authorization: `Bearer ${token}` } : {} };
+  const req = http.request(options, (res) => {
+    let body = '';
+    res.on('data', (c) => body += c);
+    res.on('end', () => {
+      console.log('PATH:', path);
+      try { console.log(JSON.parse(body)); } catch (e) { console.log(body); }
+      resolve();
+    });
+  });
+  req.on('error', (err) => { console.error(err); resolve(); });
+  req.end();
+});
+const login = () => new Promise((resolve) => {
+  const data = JSON.stringify({ email: 'admin@casemate.com', password: 'admin123' });
+  const options = { hostname: 'localhost', port: 5000, path: '/api/auth/login', method: 'POST', headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(data) } };
+  const req = http.request(options, (res) => {
+    let body = '';
+    res.on('data', (c) => body += c);
+    res.on('end', () => {
+      try { const obj = JSON.parse(body); resolve(obj.token); } catch (e) { resolve(null); }
+    });
+  });
+  req.on('error', () => resolve(null));
+  req.write(data);
+  req.end();
+});
+
+(async () => {
+  const token = await login();
+  console.log('Token OK?', !!token);
+  await run('/api/admin/users', token);
+  await run('/api/admin/users?excludeAdmin=true', token);
+  await run('/api/admin/users?role=admin', token);
+})();

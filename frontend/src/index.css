@@ -1,0 +1,59 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply bg-surface-950 text-slate-100 font-sans antialiased;
+  background-image: radial-gradient(circle at 15% 20%, rgba(99, 102, 241, 0.14), transparent 35%), radial-gradient(circle at 80% 10%, rgba(20, 184, 166, 0.12), transparent 38%), radial-gradient(circle at 50% 100%, rgba(236, 72, 153, 0.08), transparent 40%);
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center rounded-xl font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-brand-500/50 focus:ring-offset-2 focus:ring-offset-surface-950 disabled:opacity-50 disabled:pointer-events-none;
+  }
+  .btn-primary {
+    @apply btn bg-gradient-to-r from-brand-500 to-brand-400 text-slate-900 px-5 py-2.5 rounded-full shadow-lg shadow-brand-500/20 hover:shadow-brand-500/30;
+  }
+  .btn-secondary {
+    @apply btn bg-surface-800 text-slate-200 hover:bg-slate-700 border border-slate-700/50 px-5 py-2.5 rounded-xl;
+  }
+  .btn-ghost {
+    @apply btn text-slate-400 hover:text-white hover:bg-white/5 px-4 py-2 rounded-xl;
+  }
+  .input {
+    @apply w-full rounded-xl border border-slate-700/80 bg-surface-900/80 px-4 py-3 text-slate-100 placeholder-slate-500 focus:border-brand-500/80 focus:ring-2 focus:ring-brand-500/20 focus:outline-none transition-all duration-200;
+  }
+  .card {
+    @apply rounded-2xl border border-slate-800/80 bg-gradient-to-br from-surface-900/60 to-surface-850/40 shadow-card backdrop-blur-md;
+  }
+  .card-glass {
+    @apply rounded-2xl border border-slate-700/60 bg-surface-900/70 shadow-card backdrop-blur-xl;
+  }
+  .card-interactive {
+    @apply card hover:shadow-card-hover hover:border-brand-500/20 transition-all duration-200;
+  }
+  .link {
+    @apply text-brand-400 hover:text-brand-300 underline-offset-2 hover:underline transition-colors;
+  }
+  .label {
+    @apply block text-sm font-medium text-slate-400 mb-1.5;
+  }
+  .chip {
+    @apply inline-flex items-center rounded-full border border-slate-700/70 bg-surface-900/80 px-3 py-1 text-xs font-medium text-slate-300;
+  }
+  .section-title {
+    @apply text-xl md:text-2xl font-semibold text-white tracking-tight;
+  }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  @apply bg-surface-900/50 rounded-full;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-slate-600/80 rounded-full hover:bg-slate-500/80;
+}

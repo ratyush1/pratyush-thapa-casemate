@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="CaseMate shield mark">
+  <defs>
+    <linearGradient id="shieldOuter" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#18345f"/>
+      <stop offset="1" stop-color="#0b1d3a"/>
+    </linearGradient>
+    <linearGradient id="shieldInner" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#156e87"/>
+      <stop offset="1" stop-color="#0a284f"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f7df8f"/>
+      <stop offset="0.45" stop-color="#d6aa42"/>
+      <stop offset="1" stop-color="#9f6c18"/>
+    </linearGradient>
+    <linearGradient id="tealArc" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#0f8aa2"/>
+      <stop offset="1" stop-color="#0f657f"/>
+    </linearGradient>
+  </defs>
+
+  <path d="M32 4c7 5 15 8 23 8.5V30c0 10.8-8.7 18.9-23 26-14.3-7.1-23-15.2-23-26V12.5C17 12 25 9 32 4z" fill="url(#shieldOuter)"/>
+  <path d="M32 8.6c5.4 3.7 11.9 5.6 18.4 5.9v14.8c0 8.2-6.5 14.4-18.4 20.3C20.1 43.7 13.6 37.5 13.6 29.3V14.5c6.5-.3 13-2.2 18.4-5.9z" fill="url(#shieldInner)"/>
+  <path d="M32 5.8c6 4.1 13 6.2 20.1 6.6v16.8c0 9-7.3 15.9-20.1 22.1C19.2 45.1 11.9 38.2 11.9 29.2V12.4c7.1-.4 14.1-2.5 20.1-6.6z" fill="none" stroke="#fff" stroke-width="2.6" stroke-linejoin="round"/>
+  <path d="M32 10.5c4.7 3.2 10.2 4.9 15.8 5.2v12.8c0 7-5.5 12.1-15.8 17.2C21.7 40.6 16.2 35.5 16.2 28.5V15.7c5.6-.3 11.1-2 15.8-5.2z" fill="none" stroke="#dce7f7" stroke-width="1.8" stroke-linejoin="round"/>
+
+  <g transform="translate(32 27)">
+    <circle cx="0" cy="-9" r="2.5" fill="url(#gold)" stroke="#f8edd0" stroke-width="0.8"/>
+    <path d="M-0.8 -6.7h1.6v2.4h1.8v2.1H0.8v13.4h4.1v2.2H-4.9v-2.2h4.1V-2.2H-2.6v-2.1h1.8z" fill="url(#gold)" stroke="#f8edd0" stroke-width="0.6" stroke-linejoin="round"/>
+    <path d="M-16.5 -1.2H16.5" stroke="url(#gold)" stroke-width="2.3" stroke-linecap="round"/>
+    <path d="M-13 -1.2v4.2M13 -1.2v4.2" stroke="url(#gold)" stroke-width="1.1"/>
+    <path d="M-13 2.8l-4.7 5.9h9.4z" fill="url(#gold)" stroke="#f8edd0" stroke-width="0.8" stroke-linejoin="round"/>
+    <path d="M13 2.8l-4.7 5.9h9.4z" fill="url(#gold)" stroke="#f8edd0" stroke-width="0.8" stroke-linejoin="round"/>
+  </g>
+
+  <path d="M13 38.4c5.8 4.8 12.9 7.2 20 7.2 8.8 0 15.4-2.4 22.2-2.4 3.1 0 5.9 0.5 8.8 1.7-4.7-4.1-10.2-6.2-17.9-6.2-7.4 0-13.7 2.6-19.4 2.6-4 0-7.7-1-13.7-2.9z" fill="url(#tealArc)"/>
+</svg>

@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 430" role="img" aria-labelledby="title desc">
+  <title id="title">CaseMate logo</title>
+  <desc id="desc">A shield with golden justice scales above the CaseMate wordmark.</desc>
+  <defs>
+    <linearGradient id="shieldOuter" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#213b67"/>
+      <stop offset="1" stop-color="#0b1c39"/>
+    </linearGradient>
+    <linearGradient id="shieldInner" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1593a5"/>
+      <stop offset="0.18" stop-color="#0f6d86"/>
+      <stop offset="1" stop-color="#152d53"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fae7aa"/>
+      <stop offset="0.38" stop-color="#ddb14d"/>
+      <stop offset="1" stop-color="#a96f1b"/>
+    </linearGradient>
+    <linearGradient id="goldSoft" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#f7de90"/>
+      <stop offset="1" stop-color="#c2871a"/>
+    </linearGradient>
+    <linearGradient id="tealArc" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#0f95a6"/>
+      <stop offset="1" stop-color="#0c667d"/>
+    </linearGradient>
+    <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#081326" flood-opacity="0.22"/>
+    </filter>
+  </defs>
+
+  <g filter="url(#softShadow)">
+    <path d="M460 28c49 35 106 53 163 56v122c0 73-62 129-163 177-101-48-163-104-163-177V84c57-3 114-21 163-56z" fill="url(#shieldOuter)"/>
+    <path d="M460 49c40 28 87 43 135 45v104c0 59-47 105-135 150-88-45-135-91-135-150V94c48-2 95-17 135-45z" fill="url(#shieldInner)"/>
+    <path d="M460 37c44 31 95 47 147 49v118c0 66-54 117-147 162-93-45-147-96-147-162V86c52-2 103-18 147-49z" fill="none" stroke="#ffffff" stroke-width="12" stroke-linejoin="round"/>
+    <path d="M460 61c35 24 77 36 120 38v97c0 54-42 96-120 135-78-39-120-81-120-135V99c43-2 85-14 120-38z" fill="none" stroke="#e7eff9" stroke-width="8" stroke-linejoin="round"/>
+
+    <g transform="translate(460 142)">
+      <circle cx="0" cy="-44" r="13" fill="url(#gold)" stroke="#fff2cd" stroke-width="3"/>
+      <circle cx="0" cy="-22" r="9" fill="url(#gold)" stroke="#fff2cd" stroke-width="2.6"/>
+      <path d="M-5 -32h10v12h13v9H5v74h24v10h-58V63H-5v-74h-13v-9h13z" fill="url(#gold)" stroke="#fff2cd" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M-92 -7H92" stroke="url(#goldSoft)" stroke-width="10" stroke-linecap="round"/>
+      <path d="M-72 -7v18M72 -7v18" stroke="url(#goldSoft)" stroke-width="4" stroke-linecap="round"/>
+      <circle cx="-72" cy="-7" r="7" fill="#fef3d6"/>
+      <circle cx="72" cy="-7" r="7" fill="#fef3d6"/>
+      <path d="M-72 11l-27 63h54z" fill="url(#gold)"/>
+      <path d="M72 11l-27 63h54z" fill="url(#gold)"/>
+      <path d="M-72 11l-27 63h54z" fill="none" stroke="#fbe6ab" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M72 11l-27 63h54z" fill="none" stroke="#fbe6ab" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M-31 -7c18 6 35 6 62 0" fill="none" stroke="#fff3d1" stroke-width="4" stroke-linecap="round" opacity="0.92"/>
+      <path d="M-27 76h54" stroke="url(#gold)" stroke-width="8" stroke-linecap="round"/>
+      <path d="M-40 88h80" stroke="url(#gold)" stroke-width="6" stroke-linecap="round"/>
+    </g>
+
+    <path d="M312 239c35 52 103 85 175 85 84 0 150-27 223-27 45 0 87 12 122 31-51-54-114-82-196-82-78 0-147 35-213 35-43 0-78-14-111-42z" fill="#ffffff"/>
+    <path d="M306 236c37 53 103 83 172 83 84 0 148-30 222-30 42 0 80 11 115 29-55-51-117-75-197-75-79 0-145 33-212 33-39 0-76-13-100-40z" fill="url(#tealArc)"/>
+    <path d="M299 255c44 24 91 35 145 35 58 0 111-11 163-26-57 35-122 53-202 53-39 0-79-8-120-21z" fill="url(#gold)"/>
+  </g>
+
+  <g transform="translate(167 355)">
+    <text x="0" y="0" font-family="Avenir Next, Segoe UI, Arial, sans-serif" font-size="114" font-weight="700" fill="#ffffff" stroke="#c8d2e5" stroke-opacity="0.22" stroke-width="5" paint-order="stroke fill">
+      Casemate
+    </text>
+    <path d="M108 36c132-20 263-20 394 0" fill="none" stroke="url(#goldSoft)" stroke-width="5" stroke-linecap="round"/>
+  </g>
+</svg>
