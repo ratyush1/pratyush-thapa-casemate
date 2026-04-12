@@ -21,7 +21,8 @@ exports.createChat = async (req, res) => {
 
 exports.getMyChats = async (req, res) => {
   try {
-    const chats = await Chat.find({ user: req.user.id }).sort({ updatedAt: -1 });
+    // Only return AI chat conversations (exclude appointment chats)
+    const chats = await Chat.find({ user: req.user.id, appointment: null }).sort({ updatedAt: -1 });
     res.json({ success: true, chats });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
@@ -48,6 +49,19 @@ exports.sendMessage = async (req, res) => {
     if (!chat) return res.status(404).json({ success: false, message: 'Chat not found' });
 
     chat.messages.push({ role: 'user', content: content.trim() });
+    
+    // Auto-generate title from first user message if still default
+    if (chat.title === 'New conversation' && chat.messages.length === 1) {
+      const trimmed = content.trim();
+      // Extract title: first 60 chars or up to first sentence (. ! ?)
+      let title = trimmed.substring(0, 60);
+      const sentenceEnd = trimmed.search(/[.!?]/);
+      if (sentenceEnd > 0 && sentenceEnd < 60) {
+        title = trimmed.substring(0, sentenceEnd + 1);
+      }
+      chat.title = title.length > 0 ? title : 'New conversation';
+    }
+    
     // processMessage is async (RAG pipeline) — await it
     const botResult = await processMessage(content, chat.messages, { selectedCaseId });
     const reply = botResult?.content || 'Sorry, I could not generate a response.';
@@ -73,6 +87,7 @@ exports.sendMessage = async (req, res) => {
       userMessage: lastUser,
       assistantMessage: lastBot,
       escalationSuggested,
+      chatTitle: chat.title,
     });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });

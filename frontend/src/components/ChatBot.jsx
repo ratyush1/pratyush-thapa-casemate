@@ -87,9 +87,10 @@ export default function ChatBot({ onBookLawyer }) {
     const userMsg = { role: 'user', content: text };
     setCurrentChat((c) => c ? { ...c, messages: [...(c.messages || []), userMsg] } : c);
     api.post(`/chat/${currentChat._id}/message`, { content: text, selectedCaseId: selectedCaseId || undefined }).then(({ data }) => {
-      setCurrentChat((c) => c ? { ...c, messages: [...(c.messages || []), data.assistantMessage] } : c);
+      const updatedTitle = data.chatTitle || currentChat.title;
+      setCurrentChat((c) => c ? { ...c, title: updatedTitle, messages: [...(c.messages || []), data.assistantMessage] } : c);
       setChats((list) =>
-        list.map((ch) => (ch._id === currentChat._id ? { ...ch, messages: [...(ch.messages || []), userMsg, data.assistantMessage] } : ch))
+        list.map((ch) => (ch._id === currentChat._id ? { ...ch, title: updatedTitle, messages: [...(ch.messages || []), userMsg, data.assistantMessage] } : ch))
       );
       setSending(false);
     }).catch(() => setSending(false));

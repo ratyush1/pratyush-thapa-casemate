@@ -6,6 +6,7 @@ const Appointment = require('../models/Appointment');
 const Chat = require('../models/Chat');
 const Payment = require('../models/Payment');
 const { getIO, getUserSocketIds } = require('../utils/socket');
+const emailService = require('../utils/emailService');
 
 const generateToken = (id) =>
   jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE || '7d' });
@@ -46,6 +47,11 @@ exports.register = async (req, res) => {
     } catch (e) {
       // ignore socket errors
     }
+
+    // Send welcome email (non-blocking)
+    emailService.sendWelcomeEmail(user.email, user.name).catch((err) => {
+      console.error('Failed to send welcome email:', err.message);
+    });
 
     const token = generateToken(user._id);
     res.status(201).json({

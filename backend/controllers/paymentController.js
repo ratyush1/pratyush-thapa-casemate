@@ -1,7 +1,9 @@
 const Payment = require('../models/Payment');
 const Appointment = require('../models/Appointment');
+const User = require('../models/User');
 const { getIO } = require('../utils/socket');
 const { getUserSocketIds } = require('../utils/socket');
+const emailService = require('../utils/emailService');
 const crypto = require('crypto');
 
 const isLocalDevOrigin = (origin) => /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i.test(origin);
@@ -98,6 +100,31 @@ const markPaymentCompleted = async ({ payment, appointment, amount, verifyRespon
   if (!appointment.timeline) appointment.timeline = [];
   appointment.timeline.push({ event: 'paid', note: 'Payment completed successfully', actorRole: 'client', timestamp: new Date() });
   await appointment.save();
+
+  // Send payment receipt email (non-blocking)
+  try {
+    const client = await User.findById(appointment.client).select('name email');
+    const lawyer = await appointment.populate('lawyer', 'name');
+    if (client && client.email) {
+      const appointmentDate = new Date(appointment.date).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      });
+      emailService.sendPaymentReceipt(
+        client.email,
+        client.name || 'Client',
+        amount,
+        appointmentDate,
+        appointment.lawyer?.name || 'Your lawyer',
+        payment.transactionId
+      ).catch((err) => {
+        console.error('Failed to send payment receipt email:', err.message);
+      });
+    }
+  } catch (e) {
+    console.error('Error sending payment receipt email:', e.message);
+  }
 
   // emit timeline update to client
   try {

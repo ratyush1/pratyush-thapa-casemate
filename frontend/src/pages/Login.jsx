@@ -10,14 +10,18 @@ export default function Login() {
   const { login } = useAuth();
   const navigate = useNavigate();
 
+  const navigateByRole = (role) => {
+    const path = role === 'lawyer' ? '/lawyer' : role === 'admin' ? '/admin' : '/dashboard';
+    navigate(path);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setLoading(true);
     try {
       const data = await login(email, password);
-      const path = data.user.role === 'lawyer' ? '/lawyer' : data.user.role === 'admin' ? '/admin' : '/dashboard';
-      navigate(path);
+      navigateByRole(data.user.role);
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed. Check email/password or run the backend.');
     } finally {

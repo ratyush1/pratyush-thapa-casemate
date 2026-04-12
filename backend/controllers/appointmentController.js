@@ -3,7 +3,7 @@ const Chat = require('../models/Chat');
 const LawyerProfile = require('../models/LawyerProfile');
 const User = require('../models/User');
 const { getIO, getUserSocketIds } = require('../utils/socket');
-const { sendEmailNotification } = require('../utils/notify');
+const emailService = require('../utils/emailService');
 
 exports.createAppointment = async (req, res) => {
   try {
@@ -76,18 +76,30 @@ exports.createAppointment = async (req, res) => {
       // ignore socket errors
     }
 
-    // email notification to lawyer on new booking (best-effort)
+    // Send email to lawyer about new booking (non-blocking)
     try {
       const lawyerEmail = populated?.lawyer?.email;
       if (lawyerEmail) {
-        const lawyerName = populated?.lawyer?.name || 'Lawyer';
-        const clientName = populated?.client?.name || 'A client';
-        const subject = 'New appointment request on CaseMate';
-        const message = `Hi ${lawyerName},\n\n${clientName} has booked an appointment with you for ${new Date(populated.date).toLocaleDateString()} at ${populated.timeSlot}.\n\nPlease review and accept/reject the request from your dashboard.`;
-        await sendEmailNotification(lawyerEmail, subject, message);
+        const appointmentDate = new Date(populated.date).toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+        });
+        emailService.sendAppointmentConfirmationToLawyer(
+          lawyerEmail,
+          populated?.lawyer?.name || 'Lawyer',
+          populated?.client?.name || 'A client',
+          populated?.client?.email || '',
+          appointmentDate,
+          populated.timeSlot,
+          populated.caseDetails || ''
+        ).catch((err) => {
+          console.error('Failed to send appointment confirmation email to lawyer:', err.message);
+        });
       }
     } catch (e) {
-      // ignore email errors
+      // Silently handle email errors
+      console.error('Error in email notification:', e.message);
     }
 
     res.status(201).json({ success: true, appointment: populated });
@@ -211,20 +223,32 @@ exports.updateAppointmentStatus = async (req, res) => {
       // ignore socket errors
     }
 
-    // email notification to client on acceptance (best-effort)
+    // Send email to client about appointment status (non-blocking)
     try {
-      if (status === 'accepted') {
+      if (['accepted', 'rejected'].includes(status)) {
         const clientEmail = updated?.client?.email;
         if (clientEmail) {
-          const clientName = updated?.client?.name || 'Client';
-          const lawyerName = updated?.lawyer?.name || 'Your lawyer';
-          const subject = 'Your appointment has been accepted';
-          const message = `Hi ${clientName},\n\n${lawyerName} has accepted your appointment for ${new Date(updated.date).toLocaleDateString()} at ${updated.timeSlot}.\n\nYou can now open the chat in your dashboard.`;
-          await sendEmailNotification(clientEmail, subject, message);
+          const appointmentDate = new Date(updated.date).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+          });
+          emailService.sendAppointmentStatusToClient(
+            clientEmail,
+            updated?.client?.name || 'Client',
+            updated?.lawyer?.name || 'Your lawyer',
+            updated?.lawyer?.email || '',
+            appointmentDate,
+            updated.timeSlot,
+            status
+          ).catch((err) => {
+            console.error('Failed to send appointment status email to client:', err.message);
+          });
         }
       }
     } catch (e) {
-      // ignore email errors
+      // Silently handle email errors
+      console.error('Error in email notification:', e.message);
     }
 
     res.json({ success: true, appointment: updated });
