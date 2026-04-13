@@ -91,6 +91,13 @@ function scoreLawyerRecommendation(profile, caseSummary = '', inferredArea = '')
   };
 }
 
+function sanitizePublicLawyerProfile(profileDoc) {
+  if (!profileDoc) return null;
+  const profile = profileDoc.toObject ? profileDoc.toObject() : { ...profileDoc };
+  delete profile.documents;
+  return profile;
+}
+
 exports.getLawyers = async (req, res) => {
   try {
     const { specialization, minRate, maxRate, verified, search, caseSummary, caseArea } = req.query;
@@ -121,7 +128,7 @@ exports.getLawyers = async (req, res) => {
       const recommendation = scoreLawyerRecommendation(p, trimmedCaseSummary, inferredArea);
       return {
         ...p.user.toObject(),
-        profile: { ...p.toObject(), user: undefined },
+        profile: { ...sanitizePublicLawyerProfile(p), user: undefined },
         recommendationScore: recommendation.score,
         recommendationReasons: recommendation.reasons,
       };
@@ -158,7 +165,7 @@ exports.getLawyerById = async (req, res) => {
     const lawyer = await User.findOne({ _id: req.params.id, role: 'lawyer' }).select('-password');
     if (!lawyer) return res.status(404).json({ success: false, message: 'Lawyer not found' });
     const profile = await LawyerProfile.findOne({ user: lawyer._id });
-    res.json({ success: true, lawyer, profile });
+    res.json({ success: true, lawyer, profile: sanitizePublicLawyerProfile(profile) });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }

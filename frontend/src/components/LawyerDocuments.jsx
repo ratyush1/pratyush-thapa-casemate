@@ -107,94 +107,126 @@ export default function LawyerDocuments() {
 
   return (
     <div className="space-y-6">
-      <div className="rounded-[24px] bg-amber-500/10 border border-amber-500/30 px-4 py-4">
-        <p className="text-amber-200 text-sm font-medium">
-          At least one document is required for admin verification. Upload a file (PDF, image) or add a link.
-        </p>
+      <div className="card-glass p-5 md:p-6 border-brand-500/15 relative overflow-hidden">
+        <div className="absolute -top-16 -right-10 w-44 h-44 rounded-full bg-brand-500/10 blur-3xl" />
+        <div className="absolute -bottom-12 -left-8 w-40 h-40 rounded-full bg-cyan-500/10 blur-3xl" />
+        <div className="relative flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+          <div>
+            <p className="chip mb-2 inline-flex">Private documents</p>
+            <h2 className="font-display text-2xl font-bold text-white">Your secure document vault</h2>
+            <p className="text-slate-400 text-sm mt-2 max-w-2xl">
+              These files are only visible in your lawyer workspace and are used for verification and your own reference.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <span className="badge-success">Private</span>
+            <span className="badge-info">Admin verification</span>
+          </div>
+        </div>
         {!hasDocuments && (
-          <p className="text-amber-400/90 text-sm mt-1">Add or upload at least one document below.</p>
+          <p className="text-amber-300 text-sm mt-4">
+            Add or upload at least one document below to complete verification.
+          </p>
         )}
       </div>
 
-      <div className="card p-5 md:p-6 border-slate-700/50">
-        <h3 className="font-semibold text-white mb-3">Upload file</h3>
-        <p className="text-slate-400 text-sm mb-4">PDF or image (JPEG, PNG, GIF, WebP). Max 10MB.</p>
-        <form onSubmit={uploadFile} className="flex flex-wrap gap-3 items-end">
-          <div className="w-full sm:w-auto min-w-[160px]">
-            <label className="label">Document name</label>
-            <input
-              type="text"
-              className="input rounded-xl"
-              placeholder="e.g. Bar License"
-              value={uploadName}
-              onChange={(e) => setUploadName(e.target.value)}
-            />
+      <div className="grid gap-6 lg:grid-cols-[1fr_0.95fr]">
+        <div className="card p-5 md:p-6 border-slate-700/50">
+          <div className="flex items-start justify-between gap-3 mb-4">
+            <div>
+              <h3 className="font-semibold text-white">Upload file</h3>
+              <p className="text-slate-400 text-sm mt-1">PDF or image (JPEG, PNG, GIF, WebP). Max 10MB.</p>
+            </div>
+            <span className="badge-neutral">Secure upload</span>
           </div>
-          <div className="w-full sm:w-auto min-w-[200px]">
-            <label className="label">File</label>
-            <input
-              id="doc-file-input"
-              type="file"
-              accept=".pdf,image/jpeg,image/png,image/gif,image/webp"
-              className="file-input"
-              onChange={(e) => setFile(e.target.files?.[0] || null)}
-            />
+          <form onSubmit={uploadFile} className="space-y-4">
+            <div>
+              <label className="label">Document name</label>
+              <input
+                type="text"
+                className="input rounded-xl"
+                placeholder="e.g. Bar License"
+                value={uploadName}
+                onChange={(e) => setUploadName(e.target.value)}
+              />
+            </div>
+            <div>
+              <label className="label">File</label>
+              <input
+                id="doc-file-input"
+                type="file"
+                accept=".pdf,image/jpeg,image/png,image/gif,image/webp"
+                className="file-input"
+                onChange={(e) => setFile(e.target.files?.[0] || null)}
+              />
+            </div>
+            <button type="submit" className="btn-primary rounded-xl w-full sm:w-auto" disabled={uploading || !file}>
+              {uploading ? 'Uploading...' : 'Upload'}
+            </button>
+          </form>
+        </div>
+
+        <div className="card p-5 md:p-6 border-slate-700/50">
+          <div className="flex items-start justify-between gap-3 mb-4">
+            <div>
+              <h3 className="font-semibold text-white">Add link</h3>
+              <p className="text-slate-400 text-sm mt-1">Add a secure external URL for records or credentials.</p>
+            </div>
+            <span className="badge-neutral">Private reference</span>
           </div>
-          <button type="submit" className="btn-primary rounded-xl" disabled={uploading || !file}>
-            {uploading ? 'Uploading...' : 'Upload'}
-          </button>
-        </form>
+          <form onSubmit={addLink} className="space-y-4">
+            <div>
+              <label className="label">Document name</label>
+              <input
+                type="text"
+                className="input rounded-xl"
+                placeholder="e.g. Bar License"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+              />
+            </div>
+            <div>
+              <label className="label">Document URL</label>
+              <input
+                type="url"
+                className="input rounded-xl"
+                placeholder="https://..."
+                value={url}
+                onChange={(e) => setUrl(e.target.value)}
+              />
+            </div>
+            <button type="submit" className="btn-primary rounded-xl w-full sm:w-auto" disabled={adding}>
+              {adding ? 'Adding...' : 'Add link'}
+            </button>
+          </form>
+        </div>
       </div>
 
       <div className="card p-5 md:p-6 border-slate-700/50">
-        <h3 className="font-semibold text-white mb-3">Add link</h3>
-        <p className="text-slate-400 text-sm mb-4">Or add a document by URL (e.g. link to your license).</p>
-        <form onSubmit={addLink} className="flex flex-wrap gap-3 items-end">
-          <div className="flex-1 min-w-[140px]">
-            <label className="label">Document name</label>
-            <input
-              type="text"
-              className="input rounded-xl"
-              placeholder="e.g. Bar License"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-            />
-          </div>
-          <div className="flex-1 min-w-[200px]">
-            <label className="label">Document URL</label>
-            <input
-              type="url"
-              className="input rounded-xl"
-              placeholder="https://..."
-              value={url}
-              onChange={(e) => setUrl(e.target.value)}
-            />
-          </div>
-          <button type="submit" className="btn-primary rounded-xl" disabled={adding}>
-            {adding ? 'Adding...' : 'Add link'}
-          </button>
-        </form>
-      </div>
-
-      <div className="card p-5 md:p-6 border-slate-700/50">
-        <h3 className="font-semibold text-white mb-4">Your documents ({documents.length})</h3>
+        <div className="flex items-center justify-between gap-3 mb-4">
+          <h3 className="font-semibold text-white">Your private documents</h3>
+          <span className="badge-info">{documents.length} item{documents.length !== 1 ? 's' : ''}</span>
+        </div>
         {documents.length === 0 ? (
-          <p className="text-slate-500 text-sm">No documents yet. Upload a file or add a link above. At least one is required for verification.</p>
+          <div className="rounded-2xl border border-dashed border-slate-700/70 bg-white/[0.02] p-6 text-center">
+            <p className="text-slate-500 text-sm">No documents yet. Upload a file or add a link above. At least one is required for verification.</p>
+          </div>
         ) : (
           <ul className="space-y-3">
             {documents.map((doc, index) => {
               const viewUrl = getDocumentViewUrl(doc.url);
               return (
                 <li key={index} className="flex flex-wrap items-center justify-between gap-3 p-4 rounded-[22px] bg-surface-800/50 border border-slate-700/50">
-                  <div>
-                    <span className="font-medium text-slate-200">{doc.name}</span>
+                  <div className="min-w-0">
+                    <span className="font-medium text-slate-200 block truncate">{doc.name}</span>
+                    <span className="text-xs text-slate-500 mt-1 block">Stored privately in your workspace</span>
                     {viewUrl ? (
-                      <a href={viewUrl} target="_blank" rel="noopener noreferrer" className="mt-1 inline-flex text-brand-400 text-sm hover:underline">
+                      <a href={viewUrl} target="_blank" rel="noopener noreferrer" className="mt-2 inline-flex text-brand-400 text-sm hover:underline">
                         View document
                       </a>
                     ) : (
-                      <span className="block text-slate-500 text-sm">No link</span>
+                      <span className="block text-slate-500 text-sm mt-2">No link</span>
                     )}
                   </div>
                   <button type="button" onClick={() => removeDocument(index)} className="btn-ghost text-red-400 hover:text-red-300 text-sm rounded-xl">

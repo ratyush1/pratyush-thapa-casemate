@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import api from '../api/axios';
 import { getAssetUrl } from '../utils/media';
 import StarRating from './StarRating';
@@ -144,9 +145,19 @@ export default function LawyerList({ onSelect, recommendationContext }) {
             )}
             {l.profile?.bio && <p className="text-slate-500 text-sm mt-1 line-clamp-2">{l.profile.bio}</p>}
             <p className="text-brand-300 font-semibold mt-4">NPR {l.profile?.hourlyRate || 0}/hr</p>
-            <button type="button" onClick={() => onSelect(l)} className="btn-primary w-full mt-4 rounded-xl text-sm">
+            <div className="mt-4 grid grid-cols-1 gap-2">
+              <Link
+                to={`/lawyers/${l._id}`}
+                target="_blank"
+                rel="noreferrer"
+                className="btn-secondary w-full rounded-xl text-sm text-center"
+              >
+                View profile & feedback
+              </Link>
+              <button type="button" onClick={() => onSelect(l)} className="btn-primary w-full rounded-xl text-sm">
               Book appointment
-            </button>
+              </button>
+            </div>
           </div>
         ))}
       </div>

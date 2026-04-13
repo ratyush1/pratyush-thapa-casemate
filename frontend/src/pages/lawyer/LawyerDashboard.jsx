@@ -37,7 +37,7 @@ export default function LawyerDashboard() {
           Appointments
         </NavLink>
         <NavLink to="/lawyer/documents" className={({ isActive }) => `tab-pill ${isActive ? 'tab-pill-active' : ''}`}>
-          Documents
+          Private Docs
         </NavLink>
         <NavLink to="/lawyer/profile" className={({ isActive }) => `tab-pill ${isActive ? 'tab-pill-active' : ''}`}>
           Profile
