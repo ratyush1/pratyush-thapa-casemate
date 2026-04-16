@@ -107,7 +107,7 @@ function getWelcomeEmailTemplate(userName, userEmail) {
           <p>Complete your profile and start exploring legal solutions immediately. Our AI chatbot is available 24/7 to help you.</p>
 
           <p style="text-align: center;">
-            <a href="${process.env.FRONTEND_URL}/dashboard" class="cta-button">Go to Dashboard</a>
+            <a href="${process.env.FRONTEND_URL}" class="cta-button">Go to Dashboard</a>
           </p>
 
           <p><strong>Need Help?</strong><br>
