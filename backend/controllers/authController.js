@@ -7,6 +7,7 @@ const Chat = require('../models/Chat');
 const Payment = require('../models/Payment');
 const { getIO, getUserSocketIds } = require('../utils/socket');
 const emailService = require('../utils/emailService');
+const { uploadLocalFileToCloudinary, removeLocalFile } = require('../utils/cloudinaryUpload');
 
 const generateToken = (id) =>
   jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE || '7d' });
@@ -159,7 +160,17 @@ exports.uploadMyAvatar = async (req, res) => {
     if (!req.file) {
       return res.status(400).json({ success: false, message: 'No avatar uploaded. Choose an image (JPEG, PNG, GIF, WebP).' });
     }
-    const avatarUrl = '/uploads/avatars/' + req.file.filename;
+
+    let avatarUrl = '/uploads/avatars/' + req.file.filename;
+    const uploaded = await uploadLocalFileToCloudinary(req.file.path, {
+      folder: 'casemate/avatars',
+      resourceType: 'image',
+    });
+    if (uploaded?.url) {
+      avatarUrl = uploaded.url;
+      await removeLocalFile(req.file.path);
+    }
+
     const user = await User.findByIdAndUpdate(req.user.id, { avatar: avatarUrl }, { new: true }).select('-password');
     if (!user) return res.status(404).json({ success: false, message: 'User not found' });
 

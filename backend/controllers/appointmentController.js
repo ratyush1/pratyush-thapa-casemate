@@ -4,6 +4,7 @@ const LawyerProfile = require('../models/LawyerProfile');
 const User = require('../models/User');
 const { getIO, getUserSocketIds } = require('../utils/socket');
 const emailService = require('../utils/emailService');
+const { uploadLocalFileToCloudinary, removeLocalFile } = require('../utils/cloudinaryUpload');
 
 exports.createAppointment = async (req, res) => {
   try {
@@ -17,7 +18,16 @@ exports.createAppointment = async (req, res) => {
       return res.status(400).json({ success: false, message: 'Document file is required when booking an appointment' });
     }
     // prepare document public path
-    const publicPath = `/uploads/documents/${req.file.filename}`;
+    let publicPath = `/uploads/documents/${req.file.filename}`;
+    const uploaded = await uploadLocalFileToCloudinary(req.file.path, {
+      folder: 'casemate/case-documents',
+      resourceType: 'auto',
+    });
+    if (uploaded?.url) {
+      publicPath = uploaded.url;
+      await removeLocalFile(req.file.path);
+    }
+
     const lawyer = await User.findOne({ _id: lawyerId, role: 'lawyer' });
     if (!lawyer) return res.status(404).json({ success: false, message: 'Lawyer not found' });
 
@@ -282,7 +292,16 @@ exports.uploadCaseFile = async (req, res) => {
     if (req.body.caseDetails !== undefined) appointment.caseDetails = req.body.caseDetails;
     if (req.file) {
       // store public path so frontend can link to it
-      const publicPath = `/uploads/documents/${req.file.filename}`;
+      let publicPath = `/uploads/documents/${req.file.filename}`;
+      const uploaded = await uploadLocalFileToCloudinary(req.file.path, {
+        folder: 'casemate/case-documents',
+        resourceType: 'auto',
+      });
+      if (uploaded?.url) {
+        publicPath = uploaded.url;
+        await removeLocalFile(req.file.path);
+      }
+
       appointment.caseDocuments = appointment.caseDocuments || [];
       appointment.caseDocuments.push(publicPath);
       if (!appointment.timeline) appointment.timeline = [];
@@ -318,7 +337,16 @@ exports.uploadCaseFile = async (req, res) => {
 exports.uploadTempDocument = async (req, res) => {
   try {
     if (!req.file) return res.status(400).json({ success: false, message: 'No file uploaded' });
-    const publicPath = `/uploads/documents/${req.file.filename}`;
+    let publicPath = `/uploads/documents/${req.file.filename}`;
+    const uploaded = await uploadLocalFileToCloudinary(req.file.path, {
+      folder: 'casemate/case-documents',
+      resourceType: 'auto',
+    });
+    if (uploaded?.url) {
+      publicPath = uploaded.url;
+      await removeLocalFile(req.file.path);
+    }
+
     res.json({ success: true, url: publicPath });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
@@ -415,12 +443,27 @@ exports.getDocumentByAppointment = async (req, res) => {
       return res.status(403).json({ success: false, message: 'Not authorized to access this document' });
     }
     
-    // Check if document belongs to this appointment
-    if (!appointment.caseDocuments.includes(`/uploads/documents/${safeFilename}`)) {
+    const extractFilename = (docPath) => {
+      try {
+        if (/^https?:\/\//i.test(docPath)) {
+          return path.basename(new URL(docPath).pathname);
+        }
+      } catch {
+        // fall through to basename for malformed urls
+      }
+      return path.basename(docPath || '');
+    };
+
+    const matchedDocument = (appointment.caseDocuments || []).find((docPath) => extractFilename(docPath) === safeFilename);
+    if (!matchedDocument) {
       return res.status(404).json({ success: false, message: 'Document not found in this appointment' });
     }
-    
-    const filePath = path.join(__dirname, '../uploads/documents', safeFilename);
+
+    if (/^https?:\/\//i.test(matchedDocument)) {
+      return res.redirect(matchedDocument);
+    }
+
+    const filePath = path.join(__dirname, '../uploads/documents', path.basename(matchedDocument));
     res.setHeader('Cache-Control', 'no-store');
     res.download(filePath, safeFilename);
   } catch (err) {

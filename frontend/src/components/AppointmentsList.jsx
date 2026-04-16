@@ -246,6 +246,10 @@ export default function AppointmentsList() {
   const downloadDocument = async (appointmentId, doc, index) => {
     try {
       const rawDoc = typeof doc === 'string' ? doc : (doc?.url || '');
+      if (/^https?:\/\//i.test(rawDoc)) {
+        window.open(rawDoc, '_blank', 'noopener,noreferrer');
+        return;
+      }
       const fileName = rawDoc ? rawDoc.split('/').pop() : '';
       if (!fileName) {
         alert('Document not found');

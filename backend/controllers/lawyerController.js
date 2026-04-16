@@ -2,6 +2,7 @@ const User = require('../models/User');
 const LawyerProfile = require('../models/LawyerProfile');
 const mongoose = require('mongoose');
 const { getIO } = require('../utils/socket');
+const { uploadLocalFileToCloudinary, removeLocalFile } = require('../utils/cloudinaryUpload');
 
 const PRACTICE_AREA_KEYWORDS = {
   family: ['family', 'divorce', 'custody', 'alimony', 'domestic violence', 'marriage', 'child', 'inheritance'],
@@ -231,7 +232,17 @@ exports.uploadDocument = async (req, res) => {
     let profile = await LawyerProfile.findOne({ user: req.user.id });
     if (!profile) profile = await LawyerProfile.create({ user: req.user.id });
     const name = (req.body.name || req.file.originalname || 'Document').trim() || 'Document';
-    const url = '/uploads/documents/' + req.file.filename;
+    let url = '/uploads/documents/' + req.file.filename;
+
+    const uploaded = await uploadLocalFileToCloudinary(req.file.path, {
+      folder: 'casemate/lawyer-documents',
+      resourceType: 'auto',
+    });
+    if (uploaded?.url) {
+      url = uploaded.url;
+      await removeLocalFile(req.file.path);
+    }
+
     profile.documents = profile.documents || [];
     profile.documents.push({ name, url, uploadedAt: new Date() });
     await profile.save();
@@ -253,7 +264,17 @@ exports.uploadAvatar = async (req, res) => {
   try {
     if (!req.file) return res.status(400).json({ success: false, message: 'No avatar uploaded. Choose an image (JPEG, PNG, GIF, WebP).' });
     // update user avatar url
-    const avatarUrl = '/uploads/avatars/' + req.file.filename;
+    let avatarUrl = '/uploads/avatars/' + req.file.filename;
+
+    const uploaded = await uploadLocalFileToCloudinary(req.file.path, {
+      folder: 'casemate/avatars',
+      resourceType: 'image',
+    });
+    if (uploaded?.url) {
+      avatarUrl = uploaded.url;
+      await removeLocalFile(req.file.path);
+    }
+
     const user = await User.findByIdAndUpdate(req.user.id, { avatar: avatarUrl }, { new: true }).select('-password');
     if (!user) return res.status(404).json({ success: false, message: 'User not found' });
 
