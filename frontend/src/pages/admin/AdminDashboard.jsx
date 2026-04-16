@@ -26,7 +26,7 @@ export default function AdminDashboard() {
         <div className="hero-grid">
           <div>
             <div className="flex flex-wrap items-center gap-2">
-          <h1 className="font-display text-2xl md:text-3xl font-bold text-white tracking-tight">Admin Dashboard</h1>
+              <h1 className="font-display text-2xl md:text-3xl font-bold text-white tracking-tight">Admin Dashboard</h1>
               <span className="badge-warning">Main admin</span>
             </div>
             <p className="text-slate-300 mt-2 max-w-2xl">Manage users, verify lawyers, monitor activity, and keep platform operations clean and readable from one control center.</p>

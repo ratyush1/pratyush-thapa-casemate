@@ -9,7 +9,9 @@ html {
 body {
   @apply bg-surface-950 text-slate-100 font-sans antialiased;
   background-image: radial-gradient(circle at 12% 14%, rgba(34, 211, 238, 0.14), transparent 28%), radial-gradient(circle at 86% 12%, rgba(13, 148, 136, 0.14), transparent 30%), radial-gradient(circle at 48% 110%, rgba(245, 158, 11, 0.08), transparent 28%), linear-gradient(180deg, #020617 0%, #08111f 52%, #020617 100%);
+  line-height: 1.5;
   min-height: 100vh;
+  overflow-x: hidden;
 }
 
 #root {
@@ -63,19 +65,24 @@ body {
     @apply text-2xl font-semibold tracking-tight text-white md:text-3xl;
   }
   .page-shell {
-    @apply space-y-6 md:space-y-8;
+    @apply space-y-5 md:space-y-8;
   }
   .dashboard-hero {
-    @apply card-glass relative overflow-hidden p-6 md:p-8 border-brand-500/15;
+    @apply card-glass relative overflow-hidden p-5 md:p-8 border-brand-500/15;
   }
   .hero-grid {
-    @apply relative flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between;
+    @apply relative flex flex-col gap-5 md:gap-6 lg:flex-row lg:items-center lg:justify-between;
   }
   .tabs-shell {
-    @apply inline-flex flex-wrap gap-2 rounded-[22px] border border-slate-700/70 bg-surface-900/70 p-1.5 shadow-card;
+    @apply flex w-full max-w-full flex-nowrap gap-2 overflow-x-auto rounded-[22px] border border-slate-700/70 bg-surface-900/70 p-1.5 shadow-card;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .tabs-shell::-webkit-scrollbar {
+    display: none;
   }
   .tab-pill {
-    @apply rounded-2xl px-5 py-2.5 text-sm font-semibold text-slate-400 transition-all duration-200 hover:bg-white/5 hover:text-white;
+    @apply shrink-0 whitespace-nowrap rounded-2xl px-4 py-2.5 text-sm font-semibold text-slate-400 transition-all duration-200 hover:bg-white/5 hover:text-white;
   }
   .tab-pill-active {
     @apply bg-gradient-to-r from-brand-400 via-brand-500 to-teal-400 text-slate-950 shadow-lg shadow-brand-500/20;
@@ -133,6 +140,42 @@ body {
   }
   .subtle-divider {
     @apply h-px w-full bg-gradient-to-r from-transparent via-slate-700/70 to-transparent;
+  }
+}
+
+@media (max-width: 640px) {
+  .btn,
+  .btn-primary,
+  .btn-secondary,
+  .btn-ghost,
+  .btn-danger {
+    min-height: 2.75rem;
+  }
+
+  .input {
+    @apply px-3.5 py-3 text-[15px];
+  }
+
+  .metric-card,
+  .card,
+  .card-glass {
+    border-radius: 24px;
+  }
+
+  .metric-card {
+    @apply p-4;
+  }
+
+  .dashboard-hero {
+    @apply p-4;
+  }
+
+  .section-title {
+    @apply text-xl;
+  }
+
+  .tab-pill {
+    @apply px-4 py-2 text-sm;
   }
 }
 

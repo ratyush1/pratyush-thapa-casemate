@@ -146,11 +146,11 @@ export default function ClientDashboard() {
           <div className="flex items-center gap-3 flex-wrap lg:justify-end">
             <span className="badge-info">AI guidance</span>
             <span className="badge-success">Secure workflow</span>
-            <img src="/illustration-client.svg" alt="Client illustration" className="w-44 h-28 object-contain opacity-90" />
+            <img src="/illustration-client.svg" alt="Client illustration" className="hidden sm:block w-44 h-28 object-contain opacity-90" />
           </div>
         </div>
       </div>
-      <div className="tabs-shell w-fit">
+      <div className="tabs-shell">
         {tabs.map((t) => (
           <button
             key={t.id}

@@ -290,7 +290,7 @@ export default function CaseTracker() {
       </div>
 
       {/* Filter tabs */}
-      <div className="tabs-shell w-fit">
+      <div className="tabs-shell">
         {STATUS_FILTER_TABS.map((t) => (
           <button
             key={t.id}

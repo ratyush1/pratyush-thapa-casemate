@@ -42,15 +42,15 @@ export default function Landing() {
       </div>
 
       <header className="relative z-10 border-b border-slate-800/70 bg-surface-950/70 backdrop-blur-xl">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 min-h-20 py-4 flex items-center justify-between gap-3">
           <Link to="/" className="flex items-center gap-3">
-            <img src="/logo.svg" alt="CaseMate" className="w-24 h-auto" />
+            <img src="/logo.svg" alt="CaseMate" className="w-20 sm:w-24 h-auto" />
           </Link>
           <div className="flex items-center gap-2 sm:gap-3">
-            <Link to="/login" className="btn-ghost rounded-full text-sm">
+            <Link to="/login" className="btn-ghost rounded-full text-sm px-4 py-2">
               Sign in
             </Link>
-            <Link to="/register" className="btn-primary rounded-full text-sm px-5">
+            <Link to="/register" className="btn-primary rounded-full text-sm px-4 sm:px-5 py-2.5">
               Start free
             </Link>
           </div>
@@ -59,20 +59,20 @@ export default function Landing() {
 
       <main className="relative z-10">
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-14 md:pt-20 pb-10 md:pb-14">
-          <div className="grid lg:grid-cols-[1.1fr_0.9fr] gap-8 md:gap-10 items-center">
+          <div className="grid gap-8 md:gap-10 lg:grid-cols-[1.1fr_0.9fr] items-center">
             <div className="space-y-6 animate-slide-up">
               <p className="chip border-cyan-400/40 bg-cyan-400/10 text-cyan-200">Guided legal support for Nepal</p>
-              <h1 className="font-display text-4xl sm:text-5xl md:text-6xl font-bold text-white leading-[1.02] tracking-tight max-w-4xl">
+              <h1 className="font-display text-3xl sm:text-5xl md:text-6xl font-bold text-white leading-[1.04] tracking-tight max-w-4xl">
                 A calmer, clearer way to move legal cases forward.
               </h1>
-              <p className="text-slate-300 text-base md:text-lg max-w-2xl leading-relaxed">
+              <p className="text-slate-300 text-sm sm:text-base md:text-lg max-w-2xl leading-relaxed">
                 CaseMate combines practical AI guidance, verified lawyers, document sharing, and appointment workflows in one secure workspace.
               </p>
-              <div className="flex flex-wrap items-center gap-3 pt-1">
-                <Link to="/register" className="btn-primary rounded-full px-7 py-3 text-base font-semibold">
+              <div className="flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-3 pt-1 max-w-lg">
+                <Link to="/register" className="btn-primary rounded-full px-7 py-3 text-base font-semibold w-full sm:w-auto">
                   Create account
                 </Link>
-                <Link to="/login" className="btn-secondary rounded-full px-6 py-3 text-base">
+                <Link to="/login" className="btn-secondary rounded-full px-6 py-3 text-base w-full sm:w-auto">
                   I already have an account
                 </Link>
               </div>
@@ -89,7 +89,7 @@ export default function Landing() {
               </div>
             </div>
 
-            <div className="card-glass border-cyan-500/20 p-6 md:p-7 lg:p-8 shadow-glow animate-fade-in">
+            <div className="card-glass border-cyan-500/20 p-5 md:p-7 lg:p-8 shadow-glow animate-fade-in">
               <div className="flex items-center justify-between gap-4">
                 <div>
                   <p className="text-xs uppercase tracking-[0.2em] text-slate-500">Live workspace preview</p>
@@ -149,7 +149,7 @@ export default function Landing() {
         </section>
 
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-14">
-          <div className="card-glass border-slate-700/70 p-6 md:p-8 lg:p-10">
+          <div className="card-glass border-slate-700/70 p-5 md:p-8 lg:p-10">
             <div className="flex items-center justify-between gap-4 flex-wrap">
               <h2 className="section-title">How it works</h2>
               <span className="text-xs uppercase tracking-[0.2em] text-cyan-300">Simple process</span>
@@ -169,19 +169,19 @@ export default function Landing() {
         </section>
 
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 md:pb-20">
-          <div className="rounded-[32px] border border-cyan-400/30 bg-gradient-to-r from-cyan-500/20 via-teal-400/10 to-amber-300/15 p-7 md:p-10 shadow-panel">
+          <div className="rounded-[32px] border border-cyan-400/30 bg-gradient-to-r from-cyan-500/20 via-teal-400/10 to-amber-300/15 p-6 md:p-10 shadow-panel">
             <div className="max-w-3xl">
-              <h2 className="font-display text-3xl md:text-4xl font-bold text-white tracking-tight leading-tight">
+              <h2 className="font-display text-2xl sm:text-3xl md:text-4xl font-bold text-white tracking-tight leading-tight">
                 Ready to solve your legal case with confidence?
               </h2>
               <p className="text-slate-200 mt-3 text-sm md:text-base">
                 Join CaseMate and get practical guidance plus direct access to trusted lawyers.
               </p>
-              <div className="mt-6 flex flex-wrap gap-3">
-                <Link to="/register" className="btn-primary rounded-full px-6 py-3 text-base font-semibold">
+              <div className="mt-6 flex flex-col sm:flex-row gap-3 max-w-lg">
+                <Link to="/register" className="btn-primary rounded-full px-6 py-3 text-base font-semibold w-full sm:w-auto">
                   Get started now
                 </Link>
-                <Link to="/login" className="btn-ghost rounded-full border border-white/20 text-white hover:bg-white/10">
+                <Link to="/login" className="btn-ghost rounded-full border border-white/20 text-white hover:bg-white/10 w-full sm:w-auto">
                   Sign in
                 </Link>
               </div>

@@ -86,10 +86,10 @@ export default function Layout() {
   return (
     <div className="min-h-screen flex flex-col bg-surface-950 bg-gradient-mesh text-slate-100">
       <header className="sticky top-0 z-20 border-b border-slate-800/60 bg-surface-950/80 backdrop-blur-xl shadow-[0_8px_30px_rgba(2,6,23,0.35)]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex min-h-[76px] flex-wrap items-center justify-between gap-4 py-3">
-          <div className="flex items-center gap-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col gap-4 py-3 md:min-h-[76px] md:flex-row md:items-center md:justify-between">
+          <div className="flex items-center gap-3 sm:gap-4">
             <NavLink to={dashboardPath} className="flex items-center gap-3">
-              <img src="/logo.svg" alt="CaseMate" className="w-24 h-auto" />
+              <img src="/logo.svg" alt="CaseMate" className="w-20 sm:w-24 h-auto" />
             </NavLink>
             {user?.role !== 'lawyer' && (
               <div className="hidden lg:flex items-center rounded-full border border-slate-800/60 bg-surface-900/60 px-3 py-1 gap-2 shadow-inner shadow-black/10">
@@ -98,7 +98,7 @@ export default function Layout() {
               </div>
             )}
           </div>
-          <nav className="flex flex-wrap items-center justify-end gap-3">
+          <nav className="flex w-full flex-wrap items-center gap-3 md:w-auto md:justify-end">
             <NavLink to={dashboardPath} className={({ isActive }) => `tab-pill ${isActive ? 'tab-pill-active' : ''}`}>
               Dashboard
             </NavLink>
@@ -106,16 +106,16 @@ export default function Layout() {
               <span className="badge-danger">{unreadCount} unread</span>
             )}
             <div className="hidden md:block mx-1 h-8 w-px bg-slate-700" aria-hidden />
-            <div className="flex items-center gap-3 rounded-full border border-slate-800/70 bg-white/[0.03] pl-2 pr-2 py-1.5">
+            <div className="flex w-full items-center justify-between gap-3 rounded-[22px] border border-slate-800/70 bg-white/[0.03] px-3 py-2 sm:w-auto sm:justify-start sm:rounded-full sm:pl-2 sm:pr-2 sm:py-1.5">
               <div className="hidden sm:flex flex-col text-right mr-1">
                 <span className="text-xs uppercase tracking-[0.18em] text-slate-500">Signed in</span>
                 <span className="text-sm font-semibold text-white truncate max-w-[180px]">{user?.name}</span>
               </div>
               <div className="badge-neutral hidden md:inline-flex capitalize">{user?.role}</div>
-              <div className="w-11 h-11 rounded-2xl bg-surface-800 border border-slate-600/70 overflow-hidden shadow-lg shadow-black/30">
+              <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl bg-surface-800 border border-slate-600/70 overflow-hidden shadow-lg shadow-black/30">
                 <img src={avatarUrl} alt="avatar" className="w-full h-full object-cover" />
               </div>
-              <button type="button" onClick={() => { logout(); navigate('/'); }} className="btn-ghost text-sm text-slate-300">
+              <button type="button" onClick={() => { logout(); navigate('/'); }} className="btn-ghost text-sm text-slate-300 px-3 py-2 sm:px-4">
                 Logout
               </button>
             </div>
@@ -135,7 +135,7 @@ export default function Layout() {
           </div>
         </div>
       )}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-10">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-10">
         <Outlet />
       </main>
       <Footer />

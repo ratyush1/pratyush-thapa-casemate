@@ -28,11 +28,11 @@ export default function LawyerDashboard() {
           <div className="flex items-center gap-3 flex-wrap lg:justify-end">
             <span className="badge-info">Appointments</span>
             <span className="badge-success">Client docs</span>
-            <img src="/illustration-lawyer.svg" alt="Lawyer illustration" className="w-44 h-28 object-contain opacity-90" />
+            <img src="/illustration-lawyer.svg" alt="Lawyer illustration" className="hidden sm:block w-44 h-28 object-contain opacity-90" />
           </div>
         </div>
       </div>
-      <nav className="tabs-shell w-fit">
+      <nav className="tabs-shell">
         <NavLink to="/lawyer" end className={({ isActive }) => `tab-pill ${isActive ? 'tab-pill-active' : ''}`}>
           Appointments
         </NavLink>
