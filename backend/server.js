@@ -23,6 +23,40 @@ const frontendOrigins = (process.env.FRONTEND_URL || 'http://localhost:3000')
   .map((s) => s.trim())
   .filter(Boolean);
 
+const escapeRegExp = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+const vercelProjectPrefixes = new Set(
+  frontendOrigins
+    .map((origin) => {
+      try {
+        const host = new URL(origin).hostname;
+        if (!host.endsWith('.vercel.app')) return null;
+        return host.replace('.vercel.app', '').split('-git-')[0];
+      } catch {
+        return null;
+      }
+    })
+    .filter(Boolean)
+);
+
+const isAllowedVercelPreviewOrigin = (origin) => {
+  if (!vercelProjectPrefixes.size) return false;
+
+  try {
+    const host = new URL(origin).hostname;
+    if (!host.endsWith('.vercel.app')) return false;
+
+    for (const prefix of vercelProjectPrefixes) {
+      const re = new RegExp(`^${escapeRegExp(prefix)}(?:-[a-z0-9-]+)?\\.vercel\\.app$`, 'i');
+      if (re.test(host)) return true;
+    }
+  } catch {
+    return false;
+  }
+
+  return false;
+};
+
 const isLocalDevOrigin = (origin) => /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i.test(origin);
 
 const corsOptions = {
@@ -30,6 +64,10 @@ const corsOptions = {
     if (!origin) return callback(null, true);
 
     if (frontendOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+
+    if (isAllowedVercelPreviewOrigin(origin)) {
       return callback(null, true);
     }
 
@@ -43,6 +81,7 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
