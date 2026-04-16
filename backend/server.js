@@ -23,6 +23,9 @@ const frontendOrigins = (process.env.FRONTEND_URL || 'http://localhost:3000')
   .map((s) => s.trim())
   .filter(Boolean);
 
+// Set CORS_ALLOW_ALL=false to re-enable strict origin checks.
+const allowAllOrigins = process.env.CORS_ALLOW_ALL !== 'false';
+
 const escapeRegExp = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 const vercelProjectPrefixes = new Set(
@@ -61,6 +64,10 @@ const isLocalDevOrigin = (origin) => /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)
 
 const corsOptions = {
   origin(origin, callback) {
+    if (allowAllOrigins) {
+      return callback(null, true);
+    }
+
     if (!origin) return callback(null, true);
 
     if (frontendOrigins.includes(origin)) {
