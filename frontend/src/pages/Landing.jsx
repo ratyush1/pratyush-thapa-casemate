@@ -89,50 +89,13 @@ export default function Landing() {
               </div>
             </div>
 
-            <div className="card-glass border-cyan-500/20 p-5 md:p-7 lg:p-8 shadow-glow animate-fade-in">
-              <div className="flex items-center justify-between gap-4">
-                <div>
-                  <p className="text-xs uppercase tracking-[0.2em] text-slate-500">Live workspace preview</p>
-                  <h2 className="mt-2 font-display text-2xl text-white">From question to consultation</h2>
-                </div>
-                <span className="badge-success">Matched</span>
-              </div>
-              <div className="mt-5 rounded-[24px] border border-slate-700/70 bg-surface-900/85 p-5">
-                <div className="flex items-center justify-between">
-                  <p className="text-sm font-semibold text-slate-200">Case summary</p>
-                  <span className="badge-info">AI ranked</span>
-                </div>
-                <p className="text-sm text-slate-400 mt-3 leading-relaxed">
-                  Employment contract dispute regarding unpaid overtime and wrongful dismissal notice.
-                </p>
-              </div>
-              <div className="mt-4 rounded-[24px] border border-slate-700/70 bg-surface-900/75 p-5">
-                <p className="text-sm font-semibold text-slate-200">Top recommended lawyer</p>
-                <div className="mt-3 flex items-center justify-between gap-3">
-                  <div>
-                    <p className="text-white font-semibold">Aarav Sharma</p>
-                    <p className="text-xs text-slate-400 mt-0.5">Employment Law • 8 years • Verified</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-cyan-300 font-semibold">96% match</p>
-                    <p className="text-xs text-slate-400">NPR 4500/hr</p>
-                  </div>
-                </div>
-              </div>
-              <div className="mt-4 grid grid-cols-3 gap-3">
-                <div className="rounded-2xl bg-slate-900/85 border border-slate-700/70 p-3">
-                  <p className="text-[11px] uppercase tracking-[0.16em] text-slate-500">Response</p>
-                  <p className="text-sm text-white mt-1">Under 1h</p>
-                </div>
-                <div className="rounded-2xl bg-slate-900/85 border border-slate-700/70 p-3">
-                  <p className="text-[11px] uppercase tracking-[0.16em] text-slate-500">Docs</p>
-                  <p className="text-sm text-white mt-1">Encrypted</p>
-                </div>
-                <div className="rounded-2xl bg-slate-900/85 border border-slate-700/70 p-3">
-                  <p className="text-[11px] uppercase tracking-[0.16em] text-slate-500">Payment</p>
-                  <p className="text-sm text-white mt-1">Integrated</p>
-                </div>
-              </div>
+            <div className="card-glass border-cyan-500/20 p-4 md:p-5 lg:p-6 shadow-glow animate-fade-in">
+              <img
+                src="/dashboard.png"
+                alt="CaseMate dashboard preview"
+                className="w-full rounded-[24px] border border-slate-700/70 object-cover"
+                loading="lazy"
+              />
             </div>
           </div>
         </section>

@@ -31,22 +31,26 @@ export default function Login() {
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 py-12 bg-surface-950 bg-gradient-auth">
-      <div className="max-w-7xl w-full grid gap-6 lg:grid-cols-[0.95fr_0.75fr] items-stretch">
-        <div className="card-glass hidden lg:flex flex-col justify-between p-8 xl:p-10 border-brand-500/15 animate-slide-up overflow-hidden relative">
-          <div className="absolute -top-10 right-0 h-48 w-48 rounded-full bg-brand-400/10 blur-3xl" />
-          <div>
-            <p className="chip border-cyan-400/40 bg-cyan-400/10 text-cyan-200">Client, lawyer, and admin workspace</p>
-            <h1 className="mt-5 font-display text-5xl leading-[1.02] text-white max-w-xl">Keep every legal conversation, booking, and document in one place.</h1>
-            <p className="mt-4 max-w-lg text-slate-300 leading-relaxed">CaseMate gives clients clearer next steps and gives legal professionals a cleaner way to manage appointments and case context.</p>
+      <div className="max-w-7xl w-full grid gap-6 lg:grid-cols-[1.08fr_0.92fr] items-stretch">
+        <div className="card-glass hidden lg:flex flex-col p-7 xl:p-8 border-brand-500/20 animate-slide-up overflow-hidden relative">
+          <div className="absolute -top-16 -left-10 h-56 w-56 rounded-full bg-cyan-400/10 blur-3xl" />
+          <div className="absolute -bottom-20 right-0 h-72 w-72 rounded-full bg-teal-400/10 blur-3xl" />
+          <div className="relative z-10 mb-5">
+            <p className="chip border-cyan-400/40 bg-cyan-400/10 text-cyan-200">Secure sign in</p>
+            <h1 className="mt-4 font-display text-3xl xl:text-4xl leading-tight text-white">Welcome back</h1>
           </div>
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="rounded-[24px] border border-slate-700/70 bg-surface-900/70 p-5">
-              <p className="text-xs uppercase tracking-[0.2em] text-slate-500">Fast intake</p>
-              <p className="mt-2 text-white font-semibold">AI-guided case summary and lawyer matching</p>
-            </div>
-            <div className="rounded-[24px] border border-slate-700/70 bg-surface-900/70 p-5">
-              <p className="text-xs uppercase tracking-[0.2em] text-slate-500">Secure workflow</p>
-              <p className="mt-2 text-white font-semibold">Chat, files, payments, and updates in one timeline</p>
+          <div className="relative z-10 rounded-[24px] border border-slate-700/70 bg-surface-900/50 p-2 h-[430px] xl:h-[500px]">
+            <img
+              src="/log.png"
+              alt="Login workspace preview"
+              className="w-full h-full rounded-[18px] object-cover object-top"
+              loading="lazy"
+            />
+            <div className="pointer-events-none absolute inset-x-2 bottom-2 rounded-b-[18px] bg-gradient-to-t from-slate-950/85 via-slate-950/25 to-transparent p-4">
+              <div className="flex items-center gap-2">
+                <span className="badge-info">Private</span>
+                <span className="badge-success">Synced</span>
+              </div>
             </div>
           </div>
         </div>
