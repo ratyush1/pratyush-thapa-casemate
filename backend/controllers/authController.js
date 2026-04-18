@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
 const { validationResult } = require('express-validator');
 const User = require('../models/User');
 const LawyerProfile = require('../models/LawyerProfile');
@@ -9,8 +10,14 @@ const { getIO, getUserSocketIds } = require('../utils/socket');
 const emailService = require('../utils/emailService');
 const { uploadLocalFileToCloudinary, removeLocalFile } = require('../utils/cloudinaryUpload');
 
+const PASSWORD_RESET_OTP_EXPIRE_MINUTES = Number(process.env.PASSWORD_RESET_OTP_EXPIRE_MINUTES || 10);
+const PASSWORD_RESET_OTP_MAX_ATTEMPTS = Number(process.env.PASSWORD_RESET_OTP_MAX_ATTEMPTS || 5);
+
 const generateToken = (id) =>
   jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE || '7d' });
+
+const hashOtp = (otp) => crypto.createHash('sha256').update(String(otp)).digest('hex');
+const generateSixDigitOtp = () => String(Math.floor(100000 + Math.random() * 900000));
 
 exports.register = async (req, res) => {
   try {
@@ -102,6 +109,96 @@ exports.login = async (req, res) => {
         avatar: user.avatar,
       },
     });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+exports.requestPasswordResetOtp = async (req, res) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) return res.status(400).json({ success: false, errors: errors.array() });
+
+    const { email } = req.body;
+    const emailNorm = String(email || '').toLowerCase().trim();
+    const genericMessage = 'If that email is registered, an OTP has been sent.';
+
+    const user = await User.findOne({ email: emailNorm }).select(
+      '+resetPasswordOtpHash +resetPasswordOtpExpiresAt +resetPasswordOtpAttempts'
+    );
+
+    if (!user) {
+      return res.json({ success: true, message: genericMessage });
+    }
+
+    const otp = generateSixDigitOtp();
+    user.resetPasswordOtpHash = hashOtp(otp);
+    user.resetPasswordOtpExpiresAt = new Date(Date.now() + PASSWORD_RESET_OTP_EXPIRE_MINUTES * 60 * 1000);
+    user.resetPasswordOtpAttempts = 0;
+    await user.save({ validateBeforeSave: false });
+
+    emailService
+      .sendPasswordResetOtpEmail(
+        user.email,
+        user.name,
+        otp,
+        `${PASSWORD_RESET_OTP_EXPIRE_MINUTES} minutes`
+      )
+      .catch((err) => {
+        console.error('Failed to send password reset OTP email:', err.message);
+      });
+
+    res.json({ success: true, message: genericMessage });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+exports.verifyPasswordResetOtp = async (req, res) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) return res.status(400).json({ success: false, errors: errors.array() });
+
+    const { email, otp, newPassword } = req.body;
+    const emailNorm = String(email || '').toLowerCase().trim();
+
+    const user = await User.findOne({ email: emailNorm }).select(
+      '+password +resetPasswordOtpHash +resetPasswordOtpExpiresAt +resetPasswordOtpAttempts'
+    );
+
+    if (!user || !user.resetPasswordOtpHash || !user.resetPasswordOtpExpiresAt) {
+      return res.status(400).json({ success: false, message: 'Invalid or expired OTP' });
+    }
+
+    if (user.resetPasswordOtpExpiresAt.getTime() < Date.now()) {
+      user.resetPasswordOtpHash = undefined;
+      user.resetPasswordOtpExpiresAt = undefined;
+      user.resetPasswordOtpAttempts = 0;
+      await user.save({ validateBeforeSave: false });
+      return res.status(400).json({ success: false, message: 'OTP expired. Please request a new OTP.' });
+    }
+
+    if ((user.resetPasswordOtpAttempts || 0) >= PASSWORD_RESET_OTP_MAX_ATTEMPTS) {
+      return res.status(429).json({
+        success: false,
+        message: 'Maximum OTP attempts reached. Please request a new OTP.',
+      });
+    }
+
+    const otpMatches = user.resetPasswordOtpHash === hashOtp(otp);
+    if (!otpMatches) {
+      user.resetPasswordOtpAttempts = (user.resetPasswordOtpAttempts || 0) + 1;
+      await user.save({ validateBeforeSave: false });
+      return res.status(400).json({ success: false, message: 'Invalid OTP' });
+    }
+
+    user.password = newPassword;
+    user.resetPasswordOtpHash = undefined;
+    user.resetPasswordOtpExpiresAt = undefined;
+    user.resetPasswordOtpAttempts = 0;
+    await user.save();
+
+    res.json({ success: true, message: 'Password reset successful. Please login with your new password.' });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }

@@ -428,6 +428,57 @@ function getPasswordResetTemplate(userName, resetLink, expiryTime = '24 hours') 
 }
 
 /**
+ * Password Reset OTP Email
+ */
+function getPasswordResetOtpTemplate(userName, otpCode, expiryTime = '10 minutes') {
+  return `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; background: #f9f9f9; border-radius: 8px; }
+        .header { background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%); color: white; padding: 30px; text-align: center; border-radius: 8px 8px 0 0; }
+        .header h1 { margin: 0; font-size: 28px; }
+        .content { background: white; padding: 30px; }
+        .otp-box { background: #f3f8ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 18px; text-align: center; margin: 20px 0; }
+        .otp-code { font-size: 36px; letter-spacing: 8px; font-weight: 700; color: #1d4ed8; font-family: 'Courier New', monospace; }
+        .warning-box { background: #fff7ed; border-left: 4px solid #fb923c; padding: 12px; margin-top: 16px; color: #9a3412; border-radius: 4px; }
+        .footer { background: #f9f9f9; padding: 20px; text-align: center; font-size: 12px; color: #666; border-top: 1px solid #eee; }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <div class="header">
+          <h1>Password Reset OTP</h1>
+        </div>
+        <div class="content">
+          <p>Hello <strong>${userName}</strong>,</p>
+          <p>Use the OTP below to reset your CaseMate password:</p>
+
+          <div class="otp-box">
+            <div class="otp-code">${otpCode}</div>
+            <p style="margin-top: 10px; color: #475569;">This code expires in ${expiryTime}.</p>
+          </div>
+
+          <div class="warning-box">
+            If you did not request this, ignore this email. Do not share this code with anyone.
+          </div>
+
+          <p>Best regards,<br><strong>The CaseMate Team</strong></p>
+        </div>
+        <div class="footer">
+          <p>&copy; 2026 CaseMate. All rights reserved.</p>
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+}
+
+/**
  * Account Verification Email
  */
 function getVerificationEmailTemplate(userName, verificationLink) {
@@ -493,6 +544,7 @@ module.exports = {
   getAppointmentStatusTemplate,
   getPaymentReceiptTemplate,
   getPasswordResetTemplate,
+  getPasswordResetOtpTemplate,
   getVerificationEmailTemplate,
   
   /**
@@ -522,6 +574,11 @@ module.exports = {
   sendPasswordResetEmail: async (email, userName, resetLink) => {
     const html = getPasswordResetTemplate(userName, resetLink);
     return sendEmail(email, '🔐 Reset Your CaseMate Password', html);
+  },
+
+  sendPasswordResetOtpEmail: async (email, userName, otpCode, expiryTime) => {
+    const html = getPasswordResetOtpTemplate(userName, otpCode, expiryTime);
+    return sendEmail(email, 'Your CaseMate Password Reset OTP', html);
   },
 
   sendVerificationEmail: async (email, userName, verificationLink) => {

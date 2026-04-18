@@ -3,6 +3,8 @@ const { body } = require('express-validator');
 const {
   register,
   login,
+  requestPasswordResetOtp,
+  verifyPasswordResetOtp,
   getMe,
   updateMe,
   uploadMyAvatar,
@@ -29,6 +31,20 @@ router.post(
     body('password').notEmpty(),
   ],
   login
+);
+router.post(
+  '/forgot-password/request',
+  [body('email').isEmail().normalizeEmail().withMessage('Valid email required')],
+  requestPasswordResetOtp
+);
+router.post(
+  '/forgot-password/verify-otp',
+  [
+    body('email').isEmail().normalizeEmail().withMessage('Valid email required'),
+    body('otp').isLength({ min: 6, max: 6 }).isNumeric().withMessage('OTP must be a 6 digit code'),
+    body('newPassword').isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),
+  ],
+  verifyPasswordResetOtp
 );
 router.get('/me', protect, getMe);
 router.put('/me', protect, updateMe);
